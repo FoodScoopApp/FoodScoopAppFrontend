@@ -1,0 +1,7 @@
+{
+  "name": "FoodScoopAppFrontend",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
