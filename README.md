@@ -19,4 +19,4 @@ Note: At least on Linux 6.1.8-arch1-1, the environment variable `NODE_OPTIONS` m
 ```sh
 $ npm run web # for web
 $ npm run ios # for iOS (requires macOS ^13 and Xcode version ^13)
-$ npm run android # for web (requires Android SDK version TODO)
+$ npm run android # for Android (requires Android SDK version TODO)
