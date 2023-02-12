@@ -2,13 +2,14 @@ import axios, { AxiosRequestConfig } from "axios";
 import { is } from "typescript-is";
 
 // Constants
-export type method = "get" | "post" | "delete";
 export const APIURL = __DEV__
   ? "http://localhost/api/v1/"
   : "https://foodscoopapp.com/api/v1/";
 
 // Errors
-export const errorCreator = (code: ErrorCode) => code;
+export const errorCreator = (code: ErrorCode, message?: string) => {
+  return {code: code, message: message}
+};
 
 // Builds requests to send to the server
 export const requestBuilder = async (
@@ -36,7 +37,7 @@ export const requestBuilder = async (
 
     try {
       const data = JSON.parse(resp.data);
-      if (handleError && is<ErrorResp>(data)) throw errorCreator(data.error);
+      if (handleError && is<ErrorResp>(data)) throw errorCreator(data.error, data.message);
 
       return data;
     } catch {
