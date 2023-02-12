@@ -1,4 +1,4 @@
-import { is } from "typescript-is";
+import { is } from "typia";
 import { errorCreator, requestBuilder } from "./serverConn";
 
 export const checkUserExists = async (email: string) => {

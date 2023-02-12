@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { is } from "typescript-is";
+import { is } from "typia";
 
 // Constants
 export const APIURL = __DEV__
@@ -8,7 +8,7 @@ export const APIURL = __DEV__
 
 // Errors
 export const errorCreator = (code: ErrorCode, message?: string) => {
-  return {code: code, message: message}
+  return { code: code, message: message };
 };
 
 // Builds requests to send to the server
@@ -22,9 +22,12 @@ export const requestBuilder = async (
 
   // Add auth headers if found
   if (localStorage.getItem("email") && localStorage.getItem("token")) {
-    options.auth = {
+    const auth: Authorization = {
       username: localStorage.getItem("email") as string,
-      password: localStorage.getItem("token") as string,
+      password: localStorage.getItem("token") as string
+    }
+    options.headers = {
+      Authorization: JSON.stringify(auth)
     };
   }
 
@@ -37,7 +40,8 @@ export const requestBuilder = async (
 
     try {
       const data = JSON.parse(resp.data);
-      if (handleError && is<ErrorResp>(data)) throw errorCreator(data.error, data.message);
+      if (handleError && is<ErrorResp>(data))
+        throw errorCreator(data.error, data.message);
 
       return data;
     } catch {
