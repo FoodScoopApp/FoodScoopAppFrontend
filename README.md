@@ -14,6 +14,7 @@ Note: make sure to clone this repository with `--recurse-submodules`.
 
 ```sh
 $ npm i
+$ npx ttsc
 $ npm run build
 ```
 
