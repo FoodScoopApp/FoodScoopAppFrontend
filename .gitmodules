@@ -1,0 +1,3 @@
+[submodule "src/dataconnection/FoodScoopAppTypes"]
+	path = src/dataconnection/FoodScoopAppTypes
+	url = git@github.com:/FoodScoopApp/FoodScoopAppTypes
