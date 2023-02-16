@@ -3,14 +3,18 @@ A React frontend for FoodScoop: A new dining experience
 
 ## Build Application
 
-Dependencies:
+### Dependencies:
 - Node.js version ^19.x.x
 - npm version ^9.x.x
 - Other dependencies highlighted in `package.json`
 
-Build Script:
+### Build Script:
+
+Note: make sure to clone this repository with `--recurse-submodules`.
+
 ```sh
 $ npm i
+$ npx ttsc
 $ npm run build
 ```
 
