@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {
     Dimensions,
     Image,
@@ -11,7 +11,21 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 
 
-export default function LoginScreen() {
+// @ts-ignore
+export default function LoginScreen({ navigation }) {
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+
+    function login() {
+        //Do login stuff here, then go to home page
+        navigation.navigate("HomeScreen");
+    }
+
+    function signup() {
+        //Do signup stuff here, like navigate to signup page
+        navigation.navigate("SignupScreen");
+    }
+
     return(
         <ScrollView>
             <View style={styles.logoView}>
@@ -24,15 +38,19 @@ export default function LoginScreen() {
                 <TextInput
                     style={styles.input}
                     placeholder={"username"}
-                    placeholderTextColor={"grey"}/>
+                    placeholderTextColor={"grey"}
+                    value={username}
+                    onChangeText={setUsername}/>
                 <TextInput
                     style={styles.input}
                     placeholder={"password"}
-                    placeholderTextColor={"grey"}/>
+                    placeholderTextColor={"grey"}
+                    value={password}
+                    onChangeText={setPassword}/>
                 <LinearGradient
                     colors={["#DE6437", "#D93C78"]}
                     style={styles.loginButton}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => login()}>
                         <Text style={{fontSize: 16}}>Log In</Text>
                     </TouchableOpacity>
                 </LinearGradient>
@@ -43,14 +61,6 @@ export default function LoginScreen() {
             </View>
         </ScrollView>
     )
-}
-
-function login() {
-    //Do login stuff here, then go to home page
-}
-
-function signup() {
-    //Do signup stuff here, like navigate to signup page
 }
 
 const styles = StyleSheet.create({
