@@ -1,4 +1,5 @@
 import { is } from "typia";
+import { set } from 'sync-storage'
 import { errorCreator, requestBuilder } from "./serverConn";
 
 export const checkUserExists = async (email: string) => {
@@ -16,8 +17,8 @@ export const signUp = async (email: string, name: string, password: string) => {
   if (!is<SignUpInResp>(resp)) throw errorCreator("InternalServer");
 
   // Persist token to local storage
-  localStorage.setItem("email", email);
-  localStorage.setItem("token", resp.token);
+  set("email", email);
+  set("token", resp.token);
 
   return true;
 }
@@ -29,8 +30,8 @@ export const signIn = async (email: string, password: string) => {
   if (!is<SignUpInResp>(resp)) throw errorCreator("InternalServer");
 
   // Persist token to local storage
-  localStorage.setItem("email", email);
-  localStorage.setItem("token", resp.token);
+  set("email", email);
+  set("token", resp.token);
 
   return true;
 }
