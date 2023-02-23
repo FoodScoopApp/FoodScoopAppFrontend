@@ -1,10 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { is } from "typia";
-
-// Constants
-export const APIURL = __DEV__
-  ? "http://localhost/api/v1/"
-  : "https://foodscoopapp.com/api/v1/";
+import { get } from "sync-storage";
+import { APIURL } from "../../App";
 
 // Errors
 export const errorCreator = (code: ErrorCode, message?: string) => {
@@ -21,10 +18,10 @@ export const requestBuilder = async (
   const options: AxiosRequestConfig = {};
 
   // Add auth headers if found
-  if (localStorage.getItem("email") && localStorage.getItem("token")) {
+  if (get("email") && get("token")) {
     const auth: Authorization = {
-      username: localStorage.getItem("email") as string,
-      password: localStorage.getItem("token") as string
+      username: get("email") as string,
+      password: get("token") as string
     }
     options.headers = {
       Authorization: JSON.stringify(auth)
