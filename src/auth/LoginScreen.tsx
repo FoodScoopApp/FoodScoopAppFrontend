@@ -10,10 +10,8 @@ import {
 } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
 
-
-// @ts-ignore
-export default function LoginScreen({ navigation }) {
-    const [username, setUsername] = useState("");
+export default function LoginScreen({ navigation } : {navigation : any}) {
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
     function login() {
@@ -37,16 +35,17 @@ export default function LoginScreen({ navigation }) {
             <View style={styles.inputView}>
                 <TextInput
                     style={styles.input}
-                    placeholder={"username"}
+                    placeholder={"email"}
                     placeholderTextColor={"grey"}
-                    value={username}
-                    onChangeText={setUsername}/>
+                    value={email}
+                    onChangeText={setEmail}/>
                 <TextInput
                     style={styles.input}
                     placeholder={"password"}
                     placeholderTextColor={"grey"}
                     value={password}
-                    onChangeText={setPassword}/>
+                    onChangeText={setPassword}
+                    secureTextEntry={true}/>
                 <LinearGradient
                     colors={["#DE6437", "#D93C78"]}
                     style={styles.loginButton}>
