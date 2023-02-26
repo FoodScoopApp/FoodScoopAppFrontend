@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { FlatList, Text, View, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { FlatList, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { DiningHall, DiningHallName, MealID, MealPeriod } from '../dataconnection/FoodScoopAppTypes/models';
 import { IconItem, ListItem } from './MealItemView';
+import { Ionicons } from '@expo/vector-icons';
 
 const styles = StyleSheet.create({
 	cell: {
@@ -33,13 +34,19 @@ function getPeriod(hall: DiningHall): MealPeriod | null {
 	return null
 }
 
-type DiningHallListProps = {
-	diningHallName: DiningHallName
-}
-
-export default function DiningHallListView(props: DiningHallListProps) {
+export default function DiningHallListView({ route, navigation }: { route: any, navigation: any }) {
 	const [useListView, setView] = useState(true)
-	const diningHall = getDiningHall(props.diningHallName)
+	useEffect(() => {
+		navigation.setOptions({
+			headerRight: () => (
+				// TODO: icons, setView
+				<TouchableOpacity onPress={() => navigation.navigate("SignupScreen")}>
+					<Ionicons name="person-outline" size={30} color="black" style={{ marginRight: 5 }} />
+				</TouchableOpacity>
+			),
+		});
+	})
+	const diningHall = getDiningHall(route.params.diningHallName)
 	if (diningHall == null) {
 		return <></>
 	}
