@@ -3,7 +3,8 @@ import React from 'react'
 import LoginScreen from "../auth/LoginScreen";
 import SignupScreen from "../auth/SignupScreen";
 import HomeScreen from "../main/HomeScreen";
-
+import ProfileScreen from "../main/ProfileScreen";
+import PreferencesScreen from '../main/PreferencesScreen';
 
 import {NavigationContainer} from "@react-navigation/native";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
@@ -26,6 +27,15 @@ export default function AppNavigator() {
                     name={"HomeScreen"}
                     component={HomeScreen}
                     options={{title: "Home"}}/>
+                <Stack.Screen
+                    name={"ProfileScreen"}
+                    component={ProfileScreen}
+                    options={{title: "Profile"}}/>    
+                <Stack.Screen
+                    name={"PreferencesScreen"}
+                    component={PreferencesScreen}
+                    options={{title: "Preferences"}}/>
+
             </Stack.Navigator>
         </NavigationContainer>
     )
