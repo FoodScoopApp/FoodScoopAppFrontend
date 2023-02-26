@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { FlatList, Text, View, Image, StyleSheet, ImageSourcePropType } from 'react-native';
-import { DietaryRestriction, DiningHall, DiningHallName, Meal, MealID, MealPeriod, MealPeriodName } from '../dataconnection/FoodScoopAppTypes/models';
-import * as MealView from './MealItemView';
+import { FlatList, Text, View, StyleSheet } from 'react-native';
+import { DiningHall, DiningHallName, MealID, MealPeriod } from '../dataconnection/FoodScoopAppTypes/models';
+import { IconItem, ListItem } from './MealItemView';
 
 const styles = StyleSheet.create({
 	cell: {
@@ -73,13 +73,12 @@ type MealsViewProps = {
 
 function IconsView(props: MealsViewProps) {
 	return <FlatList data={props.meals} horizontal={true} renderItem={({ item }) =>
-		<MealView.IconItem meal={item} />
+		<IconItem meal={item} />
 	} />
 }
 
 function ListView(props: MealsViewProps) {
 	return <FlatList data={props.meals} renderItem={({ item }) =>
-		<MealView.ListItem meal={item} />
+		<ListItem meal={item} />
 	} />
 }
-
