@@ -1,22 +1,11 @@
 import React, { useState } from 'react';
 import { FlatList, Text, View, Image, StyleSheet, ImageSourcePropType } from 'react-native';
 import { DietaryRestriction, DiningHall, DiningHallName, Meal, MealID, MealPeriod, MealPeriodName } from '../dataconnection/FoodScoopAppTypes/models';
+import * as MealView from './MealItemView';
 
 const styles = StyleSheet.create({
 	cell: {
 
-	},
-	vstack: {
-		flexDirection: 'column',
-		alignItems: 'center',
-		padding: 8,
-		gap: 8,
-	},
-	hstack: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		padding: 8,
-		width: "100%"
 	},
 	iconimage: {
 		width: 120,
@@ -32,14 +21,7 @@ const styles = StyleSheet.create({
 		fontSize: 24,
 		fontWeight: 'bold',
 	},
-	dishes: {
-
-	}
 })
-
-type DiningHallListProps = {
-	diningHallName: DiningHallName
-}
 
 function getDiningHall(name: DiningHallName): DiningHall | null {
 	// TODO: implementation
@@ -51,14 +33,8 @@ function getPeriod(hall: DiningHall): MealPeriod | null {
 	return null
 }
 
-function getMeal(id: MealID): Meal | null {
-	// TODO: implementation
-	return null
-}
-
-function getImage(id: MealID): ImageSourcePropType | null {
-	// TODO: implementation
-	return null
+type DiningHallListProps = {
+	diningHallName: DiningHallName
 }
 
 export default function DiningHallListView(props: DiningHallListProps) {
@@ -82,11 +58,6 @@ export default function DiningHallListView(props: DiningHallListProps) {
 	</>
 }
 
-type MealsViewProps = {
-	listMode: boolean,
-	meals: MealID[],
-}
-
 function Dishes(props: MealsViewProps) {
 	if (props.listMode) {
 		return ListView(props)
@@ -95,70 +66,20 @@ function Dishes(props: MealsViewProps) {
 	}
 }
 
-function IconsView(props: MealsViewProps) {
-	return <FlatList data={props.meals} horizontal={true} renderItem={({ item }) =>
-		<IconItem meal={item} />
-	} />
+type MealsViewProps = {
+	listMode: boolean,
+	meals: MealID[],
 }
 
-function IconItem(props: MealItemProps) {
-	const meal = getMeal(props.meal)
-	const image = getImage(props.meal)
-	if (meal == null) {
-		return <></>
-	}
-	if (image == null) {
-		return <></>
-	}
-	return <View style={styles.vstack}>
-		<Image
-			source={image}
-			style={styles.iconimage}
-		/>
-		<Text>{meal.name}</Text>
-	</View>
+function IconsView(props: MealsViewProps) {
+	return <FlatList data={props.meals} horizontal={true} renderItem={({ item }) =>
+		<MealView.IconItem meal={item} />
+	} />
 }
 
 function ListView(props: MealsViewProps) {
 	return <FlatList data={props.meals} renderItem={({ item }) =>
-		<ListItem meal={item} />
+		<MealView.ListItem meal={item} />
 	} />
 }
 
-type MealItemProps = {
-	meal: MealID,
-}
-
-function ListItem(props: MealItemProps) {
-	const meal = getMeal(props.meal)
-	const image = getImage(props.meal)
-	if (meal == null) {
-		return <></>
-	}
-	if (image == null) {
-		return <></>
-	}
-	return <View style={styles.hstack}>
-		<Image
-			source={image}
-			style={styles.listimage}
-		/>
-		<View style={styles.vstack}>
-			<Text>{meal.name}</Text>
-			<TagsView restrictions={meal.dietaryRestrictions} />
-		</View>
-		<Text>{
-			meal.description
-			// TODO: handle undefined
-		}</Text>
-	</View>
-}
-
-type RestrictionTagsProps = {
-	restrictions: DietaryRestriction[]
-}
-
-function TagsView(props: RestrictionTagsProps) {
-	// implementation
-	return <Text>Nothing yet.</Text>
-}
