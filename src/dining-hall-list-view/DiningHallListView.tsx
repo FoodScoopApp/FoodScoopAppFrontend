@@ -39,9 +39,9 @@ export default function DiningHallListView({ route, navigation }: { route: any, 
 	useEffect(() => {
 		navigation.setOptions({
 			headerRight: () => (
-				// TODO: icons, setView
-				<TouchableOpacity onPress={() => navigation.navigate("SignupScreen")}>
-					<Ionicons name="person-outline" size={30} color="black" style={{ marginRight: 5 }} />
+				// TODO: other views
+				<TouchableOpacity onPress={() => useListView ? setView(false) : setView(true) }>
+					<Ionicons name={ useListView ? "list" : "grid" } size={30} color="black" style={{ marginRight: 5 }} />
 				</TouchableOpacity>
 			),
 		});

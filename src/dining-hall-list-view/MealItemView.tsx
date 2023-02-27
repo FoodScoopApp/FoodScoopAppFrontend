@@ -1,5 +1,6 @@
 import React from 'react';
 import { FlatList, Text, View, Image, StyleSheet, ImageSourcePropType } from 'react-native';
+import { convertDietaryRestrictions } from '../dataconnection/FoodScoopAppTypes/converters';
 import { DietaryRestriction, DiningHall, DiningHallName, Meal, MealID, MealPeriod, MealPeriodName } from '../dataconnection/FoodScoopAppTypes/models';
 
 function getMeal(id: MealID): Meal | null {
@@ -88,7 +89,12 @@ type RestrictionTagsProps = {
 	restrictions: DietaryRestriction[]
 }
 
+function getRestrictionIcons(restrictions: DietaryRestriction[]): string[] {
+	return restrictions.map((item) => ("https://menu.dining.ucla.edu/Content/Images/WebCodes/128px/" + item + ".png"))
+}
+
 function TagsView(props: RestrictionTagsProps) {
-	// implementation
-	return <Text>Nothing yet.</Text>
+	return <FlatList data={getRestrictionIcons(props.restrictions)} horizontal={true} renderItem={({ item }) =>
+		<Image source={{uri: item}}/>
+	} />
 }
