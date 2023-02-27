@@ -36,17 +36,19 @@ function getPeriod(hall: DiningHall): MealPeriod | null {
 
 export default function DiningHallListView({ route, navigation }: { route: any, navigation: any }) {
 	const [useListView, setView] = useState(true)
+	const diningHallName = route.params.diningHallName
 	useEffect(() => {
 		navigation.setOptions({
+			title: diningHallName,
 			headerRight: () => (
-				// TODO: other views
-				<TouchableOpacity onPress={() => useListView ? setView(false) : setView(true) }>
-					<Ionicons name={ useListView ? "list" : "grid" } size={30} color="black" style={{ marginRight: 5 }} />
+				// TODO: other views, star, home, filter
+				<TouchableOpacity onPress={() => useListView ? setView(false) : setView(true)}>
+					<Ionicons name={useListView ? "list" : "grid"} size={30} color="black" style={{ marginRight: 5 }} />
 				</TouchableOpacity>
 			),
 		});
 	})
-	const diningHall = getDiningHall(route.params.diningHallName)
+	const diningHall = getDiningHall(diningHallName)
 	if (diningHall == null) {
 		return <></>
 	}
