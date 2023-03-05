@@ -22,7 +22,7 @@ export default function HomeScreen({ navigation } : {navigation : any}) {
     useEffect(() => {
         navigation.setOptions({
             headerRight: () => (
-                <TouchableOpacity onPress={() => navigation.navigate("SignupScreen")}>
+                <TouchableOpacity onPress={() => navigation.navigate("ProfileScreen")}>
                     <Ionicons name="person-outline" size={30} color="black" style={{ marginRight: 5 }}/>
                 </TouchableOpacity>
             ),
