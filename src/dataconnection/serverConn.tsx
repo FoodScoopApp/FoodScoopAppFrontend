@@ -1,5 +1,11 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { ErrorCode, Endpoint, Authorization, Method } from "./FoodScoopAppTypes/re";
+import {
+  ErrorCode,
+  Endpoint,
+  Authorization,
+  Method,
+} from "./FoodScoopAppTypes/re";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Constants
 export const APIURL = __DEV__
@@ -7,8 +13,9 @@ export const APIURL = __DEV__
   : "https://foodscoopapp.com/api/v1/";
 
 // Storage
-export const get = (key: string) => ""
-export const set = (key: string, data: any) => {}
+export const get = async (key: string) => await AsyncStorage.getItem(key);
+export const set = async (key: string, data: any) =>
+  await AsyncStorage.setItem(key, data);
 
 // Errors
 export const errorCreator = (code: ErrorCode, message?: any) => {
@@ -26,13 +33,13 @@ export const requestBuilder = async (
 ) => {
   const options: AxiosRequestConfig = {};
   // Add auth headers if found
-  if (get("email") && get("token")) {
+  if ((await get("email")) && (await get("token"))) {
     const auth: Authorization = {
-      username: get("email") as string,
-      password: get("token") as string
-    }
+      username: (await get("email")) as string,
+      password: (await get("token")) as string,
+    };
     options.headers = {
-      Authorization: JSON.stringify(auth)
+      Authorization: JSON.stringify(auth),
     };
   }
 
@@ -48,7 +55,7 @@ export const requestBuilder = async (
   try {
     resp = await axios[method](APIURL + endpoint, options);
   } catch (err) {
-    console.error(err)
+    console.error(err);
     throw errorCreator("Internet");
   }
 
