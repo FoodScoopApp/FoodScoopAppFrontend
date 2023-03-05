@@ -1,15 +1,12 @@
-import React from 'react';
-import { FlatList, Text, View, Image, StyleSheet, ImageSourcePropType } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { FlatList, Text, View, StyleSheet, ImageSourcePropType } from 'react-native';
+import BetterImage from '../dataconnection/BetterImage';
 import { DietaryRestriction, Meal, MealID } from '../dataconnection/FoodScoopAppTypes/models';
+import { getMeal } from '../dataconnection/serverMethods';
 
-function getMeal(id: MealID): Meal | null {
+export function getImageSource(id: Meal): ImageSourcePropType {
 	// TODO: implementation
-	return null
-}
-
-function getImage(id: MealID): ImageSourcePropType | null {
-	// TODO: implementation
-	return null
+	return { url: "" } as ImageSourcePropType
 }
 
 const styles = StyleSheet.create({
@@ -48,37 +45,43 @@ type MealItemProps = {
 }
 
 export function IconItem(props: MealItemProps) {
-	const meal = getMeal(props.meal)
-	const image = getImage(props.meal)
+	const [meal, setMeal] = useState<Meal | null>(null)
+	const [image, setImage] = useState<ImageSourcePropType | null>(null)
+	useEffect(() => {
+		const fetchData = async () => {
+			const newMeal = await getMeal(props.meal)
+			const newImage = getImageSource(newMeal)
+			setMeal(newMeal)
+			setImage(newImage)
+		}
+		fetchData().catch(console.error)
+	})
 	if (meal == null) {
 		return <></>
 	}
-	if (image == null) {
-		return <></>
-	}
 	return <View style={styles.vstack}>
-		<Image
-			source={image}
-			style={styles.iconimage}
-		/>
+		<BetterImage source={image} style={styles.listimage} />
 		<Text>{meal.name}</Text>
 	</View>
 }
 
 export function ListItem(props: MealItemProps) {
-	const meal = getMeal(props.meal)
-	const image = getImage(props.meal)
+	const [meal, setMeal] = useState<Meal | null>(null)
+	const [image, setImage] = useState<ImageSourcePropType | null>(null)
+	useEffect(() => {
+		const fetchData = async () => {
+			const newMeal = await getMeal(props.meal)
+			const newImage = getImageSource(newMeal)
+			setMeal(newMeal)
+			setImage(newImage)
+		}
+		fetchData().catch(console.error)
+	})
 	if (meal == null) {
 		return <></>
 	}
-	if (image == null) {
-		return <></>
-	}
 	return <View style={styles.hstack}>
-		<Image
-			source={image}
-			style={styles.listimage}
-		/>
+		<BetterImage source={image} style={styles.listimage} />
 		<View style={styles.vstack}>
 			<Text>{meal.name}</Text>
 			<TagsView restrictions={meal.dietaryRestrictions} />
@@ -100,6 +103,6 @@ export function getRestrictionIcons(restrictions: DietaryRestriction[]): string[
 
 export function TagsView(props: RestrictionTagsProps) {
 	return <FlatList data={getRestrictionIcons(props.restrictions)} horizontal={true} renderItem={({ item }) =>
-		<Image style={styles.tagimage} source={{ uri: item }} />
+		<BetterImage style={styles.tagimage} source={{ uri: item }} />
 	} />
 }

@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
-import { FlatList, Text, View, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { DiningHall, DiningHallName, MealID, MealPeriod } from '../dataconnection/FoodScoopAppTypes/models';
-import { TagsView } from '../dining-hall-list-view/MealItemView';
+import { FlatList, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Meal, Subcategory } from '../dataconnection/FoodScoopAppTypes/models';
+import { getImageSource, TagsView } from '../dining-hall-list-view/MealItemView';
+import { getMealAgg } from '../dataconnection/serverMethods';
 import { Ionicons } from '@expo/vector-icons';
+import BetterImage from '../dataconnection/BetterImage';
 
 const styles = StyleSheet.create({
 	cell: {
@@ -37,26 +39,39 @@ const styles = StyleSheet.create({
 })
 
 export default function DiningHallSubcategoryView({ route, navigation }: { route: any, navigation: any }) {
+	const [meals, setMeals] = useState<Meal[]>([])
+	const subcategory = route.params.subcategory as Subcategory
 	useEffect(() => {
 		navigation.setOptions({
 			headerRight: () => (
 				<Text>test</Text>
 			),
 		});
+		const fetchData = async () => {
+			const newMeals = await getMealAgg(subcategory.meals)
+			setMeals(newMeals)
+		}
+		fetchData().catch(console.error)
 	})
 	return <>
-		<FlatList data={[1, 2, 3]} renderItem={() =>
+		<FlatList data={meals} renderItem={(meal) =>
 			<View style={styles.hstack}>
-				<Image
-					source={{ uri: 'https://menu.dining.ucla.edu/Content/Images/RecipeImages/301001.jpg' }}
-					style={styles.listimage}
-				/>
+				<BetterImage
+					source={getImageSource(meal.item)}
+					style={styles.listimage} />
 				<View style={styles.vstack}>
-					<Text>Classic noodles made of semolina and durum wheat tossed in a rich, marinara tomato sauce served with house-made Italian meatballs.</Text>
-					<TagsView restrictions={['AWHT', "AGTN", "ASOY", "AMLK", "AEGG", "HC"]} />
+					<Text>{meal.item.description}</Text>
+					<TagsView restrictions={meal.item.dietaryRestrictions} />
 				</View>
-				<Ionicons name={"star-outline"} size={30} color="black" />
+				<TouchableOpacity onPress={async () => {
+					await onFavorite()
+				}}>
+					<Ionicons name={"star-outline"} size={30} color="black" />
+				</TouchableOpacity>
 			</View>
 		} />
 	</>
+}
+
+async function onFavorite() {
 }

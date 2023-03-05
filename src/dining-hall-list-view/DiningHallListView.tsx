@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { FlatList, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
-import { DiningHall, DiningHallName, MealID, MealPeriod } from '../dataconnection/FoodScoopAppTypes/models';
+import { DiningHall, MealID, MealPeriod } from '../dataconnection/FoodScoopAppTypes/models';
 import { IconItem, ListItem } from './MealItemView';
 import { Ionicons } from '@expo/vector-icons';
+import { getDiningHall } from '../dataconnection/serverMethods';
 
 const styles = StyleSheet.create({
 	cell: {
@@ -24,11 +25,6 @@ const styles = StyleSheet.create({
 	},
 })
 
-function getDiningHall(name: DiningHallName): DiningHall | null {
-	// TODO: implementation
-	return null
-}
-
 function getPeriod(hall: DiningHall): MealPeriod | null {
 	// TODO: implementation
 	return null
@@ -36,6 +32,8 @@ function getPeriod(hall: DiningHall): MealPeriod | null {
 
 export default function DiningHallListView({ route, navigation }: { route: any, navigation: any }) {
 	const [useListView, setView] = useState(true)
+	const [diningHall, setDiningHall] = useState<DiningHall | null>(null)
+	const [period, setPeriod] = useState<MealPeriod | null>(null)
 	const diningHallName = route.params.diningHallName
 	useEffect(() => {
 		navigation.setOptions({
@@ -47,20 +45,29 @@ export default function DiningHallListView({ route, navigation }: { route: any, 
 				</TouchableOpacity>
 			),
 		});
+		const fetchDiningHall = async () => {
+			const diningHall = await getDiningHall(diningHallName)
+			const currentPeriod = getPeriod(diningHall)
+			setDiningHall(diningHall)
+			setPeriod(currentPeriod)
+		}
+		fetchDiningHall().catch(console.error)
 	})
-	const diningHall = getDiningHall(diningHallName)
 	if (diningHall == null) {
 		return <></>
 	}
-	const currentPeriod = getPeriod(diningHall)
-	if (currentPeriod == null) {
+	if (period == null) {
 		return <></>
 	}
 	return <>
-		<FlatList data={currentPeriod.subcategories} renderItem={({ item }) =>
+		<FlatList data={period.subcategories} renderItem={({ item }) =>
 			<View
 				style={styles.cell}>
-				<Text style={styles.subcategoryName}>Subcategory</Text>
+				<TouchableOpacity onPress={async () => {
+					navigation.navigate("DiningHallSubcategoryScreen", { subcategory: item })
+				}}>
+					<Text style={styles.subcategoryName}>Subcategory</Text>
+				</TouchableOpacity>
 				<Dishes listMode={useListView} meals={item.meals} />
 			</View>
 		} />
