@@ -55,23 +55,31 @@ export default function DiningHallSubcategoryView({ route, navigation }: { route
 	})
 	return <>
 		<FlatList data={meals} renderItem={(meal) =>
-			<View style={styles.hstack}>
-				<BetterImage
-					source={getImageSource(meal.item)}
-					style={styles.listimage} />
-				<View style={styles.vstack}>
-					<Text>{meal.item.description}</Text>
-					<TagsView restrictions={meal.item.dietaryRestrictions} />
-				</View>
-				<TouchableOpacity onPress={async () => {
-					await onFavorite()
-				}}>
-					<Ionicons name={"star-outline"} size={30} color="black" />
-				</TouchableOpacity>
-			</View>
+			<SubcategoryMealView meal={meal.item}/>
 		} />
 	</>
 }
 
 async function onFavorite() {
+}
+
+type SubcategoryMealProps = {
+	meal: Meal
+}
+
+export function SubcategoryMealView(props: SubcategoryMealProps) {
+	return <View style={styles.hstack}>
+		<BetterImage
+			source={getImageSource(props.meal)}
+			style={styles.listimage} />
+		<View style={styles.vstack}>
+			<Text>{props.meal.description}</Text>
+			<TagsView restrictions={props.meal.dietaryRestrictions} />
+		</View>
+		<TouchableOpacity onPress={async () => {
+			await onFavorite()
+		}}>
+			<Ionicons name={"star-outline"} size={30} color="black" />
+		</TouchableOpacity>
+	</View>
 }
