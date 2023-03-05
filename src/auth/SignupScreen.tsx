@@ -2,15 +2,22 @@ import React, {useState} from "react";
 import {Button, Dimensions, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
 import {MultipleSelectList, SelectList} from "react-native-dropdown-select-list/index";
 import {LinearGradient} from "expo-linear-gradient";
+import {signIn, signUp} from "../dataconnection/serverMethods";
 
 export default function SignupScreen({ navigation } : {navigation : any}) {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    function createAccount() {
+    async function createAccount() {
         //Do account creation stuff here
-        navigation.navigate("HomeScreen")
+        try {
+            await signUp(email, name, password);
+            navigation.navigate("HomeScreen");
+        } catch (e: any) {
+            if(e.error == "AlreadyExists") alert("An account with this username already exists.");
+            else alert("An error occurred when signing up.");
+        }
     }
 
     // const [mealPlan, setMealPlan] = useState("");
@@ -100,7 +107,7 @@ export default function SignupScreen({ navigation } : {navigation : any}) {
             <LinearGradient
                 colors={["#DE6437", "#D93C78"]}
                 style={styles.loginButton}>
-                <TouchableOpacity onPress={() => createAccount()}>
+                <TouchableOpacity onPress={async () => await createAccount()}>
                     <Text style={{fontSize: 16}}>Create Account!</Text>
                 </TouchableOpacity>
             </LinearGradient>

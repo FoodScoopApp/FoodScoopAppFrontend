@@ -9,18 +9,23 @@ import {
     View, ScrollView, Button
 } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
-import { checkUserExists } from "../dataconnection/serverMethods";
+import {checkUserExists, signIn} from "../dataconnection/serverMethods";
 
 export default function LoginScreen({ navigation } : {navigation : any}) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    function login() {
+    async function login() {
         //Do login stuff here, then go to home page
-        checkUserExists("ea_do@icloud.com").then(exists => {
-            console.log(exists)
-        });
-        navigation.navigate("HomeScreen");
+        try {
+            await signIn(email, password);
+            navigation.navigate("HomeScreen");
+        } catch (e: any) {
+            if(e.error == "WrongPassword") alert("Incorrect email or password.");
+            else if(e.error == "NotSignedUp") alert("This user does not exist.");
+            else alert("An error occurred while logging in.");
+            navigation.navigate("HomeScreen");
+        }
     }
 
     function signup() {
@@ -53,7 +58,7 @@ export default function LoginScreen({ navigation } : {navigation : any}) {
                 <LinearGradient
                     colors={["#DE6437", "#D93C78"]}
                     style={styles.loginButton}>
-                    <TouchableOpacity onPress={() => login()}>
+                    <TouchableOpacity onPress={async () => login()}>
                         <Text style={{fontSize: 16}}>Log In</Text>
                     </TouchableOpacity>
                 </LinearGradient>
