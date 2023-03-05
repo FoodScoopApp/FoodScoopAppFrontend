@@ -38,26 +38,47 @@ export default function HomeScreen({ navigation } : {navigation : any}) {
             <View style={styles.mealPeriodsView}>
                 <View style={styles.mealTimeView}>
                     <Text style={{fontSize: 20, fontWeight: "bold"}}>Breakfast</Text>
-                    <Image source={require("../../assets/logo.png")} style={styles.image}/>
-                    <Text>Breakfast Meal</Text>
+                    <TouchableOpacity  style={styles.mealTimeView}>
+                        <Image source={require("../../assets/logo.png")} style={styles.image}/>
+                        <Text>Breakfast Meal</Text>
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.mealTimeView}>
                     <Text style={{fontSize: 20, fontWeight: "bold"}}>Lunch</Text>
-                    <Image source={require("../../assets/logo.png")} style={styles.image}/>
-                    <Text>Lunch Meal</Text>
+                    <TouchableOpacity style={styles.mealTimeView}>
+                        <Image source={require("../../assets/logo.png")} style={styles.image}/>
+                        <Text>Lunch Meal</Text>
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.mealTimeView}>
                     <Text style={{fontSize: 20, fontWeight: "bold"}}>Dinner</Text>
-                    <Image source={require("../../assets/logo.png")} style={styles.image}/>
-                    <Text>Dinner Meal</Text>
+                    <TouchableOpacity  style={styles.mealTimeView}>
+                        <Image source={require("../../assets/logo.png")} style={styles.image}/>
+                        <Text>Dinner Meal</Text>
+                    </TouchableOpacity>
                 </View>
             </View>
             <View>
-                <Text style={styles.restaurantName}>Bruin Plate</Text>
+                <TouchableOpacity
+                    style={{flexDirection: "row", alignItems: "center"}}
+                    onPress={() => navigation.navigate("DiningHallListView", {diningHallName: "BP"})}>
+                    <Text style={styles.restaurantName}>Bruin Plate</Text>
+                    <Ionicons name={"chevron-forward-outline"} size={20}/>
+                </TouchableOpacity>
                 <FlatList data={bplateFood} horizontal={true} renderItem={({item}) => <Item name={item} />}/>
-                <Text style={styles.restaurantName}>De Neve</Text>
+                <TouchableOpacity
+                    style={{flexDirection: "row", alignItems: "center"}}
+                    onPress={() => navigation.navigate("DiningHallListView", {diningHallName: "DN"})}>
+                    <Text style={styles.restaurantName}>De Neve</Text>
+                    <Ionicons name={"chevron-forward-outline"} size={20}/>
+                </TouchableOpacity>
                 <FlatList data={deneveFood} horizontal={true} renderItem={({item}) => <Item name={item} />}/>
-                <Text style={styles.restaurantName}>Epicuria</Text>
+                <TouchableOpacity
+                    style={{flexDirection: "row", alignItems: "center"}}
+                    onPress={() => navigation.navigate("DiningHallListView", {diningHallName: "EA"})}>
+                    <Text style={styles.restaurantName}>Epicuria</Text>
+                    <Ionicons name={"chevron-forward-outline"} size={20}/>
+                </TouchableOpacity>
                 <FlatList data={epicFood} horizontal={true} renderItem={({item}) => <Item name={item} />}/>
             </View>
         </ScrollView>
@@ -69,8 +90,10 @@ type ItemProps = {name: string[]};
 // @ts-ignore
 const Item = ({name}: ItemProps) => (
     <View style={styles.item}>
-        <Image source={{uri: name[1]}} style={{width: 80, height: 80, borderRadius: 16}}/>
-        <Text style={styles.name}>{name[0]}</Text>
+        <TouchableOpacity>
+            <Image source={{uri: name[1]}} style={{width: 80, height: 80, borderRadius: 16}}/>
+            <Text style={styles.name}>{name[0]}</Text>
+        </TouchableOpacity>
     </View>
 );
 

@@ -9,6 +9,7 @@ import PreferencesScreen from '../main/PreferencesScreen';
 
 import {NavigationContainer} from "@react-navigation/native";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
+import DiningHallListView from "../dining-hall-list-view/DiningHallListView";
 
 const Stack = createNativeStackNavigator();
 
@@ -36,7 +37,10 @@ export default function AppNavigator() {
                     name={"PreferencesScreen"}
                     component={PreferencesScreen}
                     options={{title: "Preferences"}}/>
-
+                <Stack.Screen
+                    name={"DiningHallListView"}
+                    component={DiningHallListView}
+                    options={{title: "Dining Hall"}}/>
             </Stack.Navigator>
         </NavigationContainer>
     )
