@@ -4,9 +4,12 @@ import LoginScreen from "../auth/LoginScreen";
 import SignupScreen from "../auth/SignupScreen";
 import HomeScreen from "../main/HomeScreen";
 
+import { Ionicons } from "@expo/vector-icons";
+
 
 import {NavigationContainer} from "@react-navigation/native";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
+import {Text, TouchableOpacity} from "react-native";
 
 const Stack = createNativeStackNavigator();
 

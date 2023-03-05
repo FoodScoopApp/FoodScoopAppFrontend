@@ -33,7 +33,11 @@
     "react-dom": "^18.2.0",
     "react-native": "^0.71.3",
     "react-native-web": "^0.18.12",
-    "typia": "^3.5.8"
+    "typia": "^3.5.8",
+    "expo-status-bar": "~1.4.2",
+    "react-native-dropdown-select-list": "^2.0.4",
+    "react-native-safe-area-context": "4.4.1",
+    "react-native-screens": "~3.18.0"
   },
   "devDependencies": {
     "@expo/metro-config": "^0.7.1",
