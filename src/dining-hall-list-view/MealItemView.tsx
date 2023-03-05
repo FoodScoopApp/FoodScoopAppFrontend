@@ -35,6 +35,12 @@ const styles = StyleSheet.create({
 		height: 80,
 		borderRadius: 16
 	},
+	tagimage: {
+		width: 24,
+		height: 24,
+		padding: 4,
+		margin: 4,
+	},
 })
 
 type MealItemProps = {
@@ -88,12 +94,12 @@ type RestrictionTagsProps = {
 	restrictions: DietaryRestriction[]
 }
 
-function getRestrictionIcons(restrictions: DietaryRestriction[]): string[] {
+export function getRestrictionIcons(restrictions: DietaryRestriction[]): string[] {
 	return restrictions.map((item) => ("https://menu.dining.ucla.edu/Content/Images/WebCodes/128px/" + item + ".png"))
 }
 
-function TagsView(props: RestrictionTagsProps) {
+export function TagsView(props: RestrictionTagsProps) {
 	return <FlatList data={getRestrictionIcons(props.restrictions)} horizontal={true} renderItem={({ item }) =>
-		<Image source={{ uri: item }} />
+		<Image style={styles.tagimage} source={{ uri: item }} />
 	} />
 }
