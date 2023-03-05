@@ -1,20 +1,17 @@
-import { is } from "typia";
-import { set } from 'sync-storage'
-import { errorCreator, requestBuilder } from "./serverConn";
+import { DiningHall, DiningHallName, Meal, MealID } from "./FoodScoopAppTypes/models";
+import { CheckUserExistsReq, CheckUserExistsResp, SignUpReq, SignUpInResp, SignInReq } from "./FoodScoopAppTypes/re";
+import { set, requestBuilder } from "./serverConn";
 
 export const checkUserExists = async (email: string) => {
   const req: CheckUserExistsReq = { email };
-  const resp = await requestBuilder("get", "userexists", req);
+  const resp: CheckUserExistsResp = await requestBuilder("get", "userexists", req);
 
-  if (!is<CheckUserExistsResp>(resp)) throw errorCreator("InternalServer");
-  return resp.exists;
+  return resp.exists; 
 };
 
 export const signUp = async (email: string, name: string, password: string) => {
   const req: SignUpReq = { email, name, password };
-  const resp = await requestBuilder("post", "signup", req);
-
-  if (!is<SignUpInResp>(resp)) throw errorCreator("InternalServer");
+  const resp: SignUpInResp = await requestBuilder("post", "signup", req);
 
   // Persist token to local storage
   set("email", email);
@@ -25,9 +22,7 @@ export const signUp = async (email: string, name: string, password: string) => {
 
 export const signIn = async (email: string, password: string) => {
   const req: SignInReq = { email, password };
-  const resp = await requestBuilder("post", "signin", req);
-
-  if (!is<SignUpInResp>(resp)) throw errorCreator("InternalServer");
+  const resp: SignUpInResp = await requestBuilder("post", "signin", req);
 
   // Persist token to local storage
   set("email", email);
@@ -35,3 +30,15 @@ export const signIn = async (email: string, password: string) => {
 
   return true;
 }
+
+// export const getDiningHall = async (diningHallName: DiningHallName) => {
+//   const dh: DiningHall = {};
+
+//   return dh;
+// }
+
+// export const getMeal = async (mealID: MealID) => {
+//   const meal: Meal = {};
+
+//   return meal;
+// }
