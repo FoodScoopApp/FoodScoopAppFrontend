@@ -39,11 +39,11 @@ export default function AppNavigator() {
                     component={PreferencesScreen}
                     options={{title: "Preferences"}}/>
                 <Stack.Screen
-                    name={"DiningHallScreen"}
-                    component={DiningHallListView}/>
-                <Stack.Screen
                     name={"DiningHallSubcategoryScreen"}
                     component={DiningHallSubcategoryView}/>
+                <Stack.Screen
+                    name={"DiningHallListView"}
+                    component={DiningHallListView}/>
             </Stack.Navigator>
         </NavigationContainer>
     )

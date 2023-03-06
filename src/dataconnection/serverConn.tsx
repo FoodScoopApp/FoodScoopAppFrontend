@@ -8,9 +8,11 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Constants
-export const APIURL = __DEV__
-  ? "http://169.232.81.26:8080/api/v1/"
-  : "https://foodscoopapp.com/api/v1/";
+export const APIURL =
+  //   __DEV__
+  // ? "http://169.232.81.26:8080/api/v1/"
+  // :
+        "https://foodscoopapp.com/api/v1/";
 
 // Storage
 export const get = async (key: string) => await AsyncStorage.getItem(key);
@@ -47,9 +49,10 @@ export const requestBuilder = async (
     if (method != "post") {
       options.params = data;
     } else {
-      options.data = data;
+      options.data = JSON.stringify(data);
     }
   }
+  console.log(options.data);
 
   let resp;
   try {

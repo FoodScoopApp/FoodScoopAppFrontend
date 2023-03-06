@@ -6,11 +6,12 @@ import {
     View,
     Text,
     Image,
-    TouchableOpacity
+    TouchableOpacity, Button
 } from 'react-native';
 import { SelectList } from 'react-native-dropdown-select-list';
+import {set} from "../dataconnection/serverConn";
 
-export default function ProfileScreen({ navigation }) {
+export default function ProfileScreen({ navigation } : {navigation: any}) {
     let [name, setName] = useState('Omar "Eado" Elamri');
     const data = [
         {key:'1', value:'11R'},
@@ -23,6 +24,13 @@ export default function ProfileScreen({ navigation }) {
 
     function preferences() {
         navigation.navigate("PreferencesScreen");
+    }
+
+    function signOut() {
+        set("email", null);
+        set("token", null);
+
+        navigation.navigate("LoginScreen");
     }
 
     return (
@@ -51,6 +59,8 @@ export default function ProfileScreen({ navigation }) {
             <TouchableOpacity style={styles.menuButton}>
                 <Text>Nutritional Information</Text>
             </TouchableOpacity>
+            <Button title={"Sign Out"}
+                    onPress={() => signOut()}/>
         </ScrollView>
     )
 }
@@ -80,7 +90,7 @@ const styles = StyleSheet.create({
         //alignItems: "center",
         alignSelf: "center",
         flexDirection: "row",
-        justifyContent: "left",
+        justifyContent: "flex-start",
         gap: 10,
         width: "100%",
         paddingHorizontal: 25,
@@ -98,7 +108,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         justifyContent: "center",
         borderRadius: 10,
-        marginTop: 10
+        marginBottom: 10
     },
     inputView: {
         paddingTop: 50,

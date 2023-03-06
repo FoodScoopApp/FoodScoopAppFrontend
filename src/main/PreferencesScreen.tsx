@@ -8,7 +8,7 @@ import {
 import { MultipleSelectList } from 'react-native-dropdown-select-list';
 import Icon from 'react-native-ionicons';
 
-export default function PreferencesScreen({ navigation }) {
+export default function PreferencesScreen({ navigation } : {navigation : any}) {
     const [selected, setSelected] = useState([]);
     const data = [
         {key: '1', value: "Bruin Plate"},
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
         //alignItems: "center",
         alignSelf: "center",
         flexDirection: "row",
-        justifyContent: "left",
+        justifyContent: "flex-start",
         gap: 10,
         width: "100%",
         paddingHorizontal: 25,
