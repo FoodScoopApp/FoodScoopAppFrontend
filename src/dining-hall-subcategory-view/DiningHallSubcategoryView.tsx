@@ -4,7 +4,7 @@ import { Meal, Subcategory } from '../dataconnection/FoodScoopAppTypes/models';
 import { getImageSource, TagsView } from '../dining-hall-list-view/MealItemView';
 import { getMealAgg } from '../dataconnection/serverMethods';
 import { Ionicons } from '@expo/vector-icons';
-import BetterImage from '../dataconnection/BetterImage';
+import BetterImage from '../common/BetterImage';
 
 const styles = StyleSheet.create({
 	cell: {

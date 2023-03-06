@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, Text, View, StyleSheet, ImageSourcePropType } from 'react-native';
-import BetterImage from '../dataconnection/BetterImage';
+import BetterImage from '../common/BetterImage';
 import { DietaryRestriction, Meal, MealID } from '../dataconnection/FoodScoopAppTypes/models';
 import { getMeal } from '../dataconnection/serverMethods';
 
