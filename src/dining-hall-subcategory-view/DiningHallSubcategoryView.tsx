@@ -43,9 +43,7 @@ export default function DiningHallSubcategoryView({ route, navigation }: { route
 	const subcategory = route.params.subcategory as Subcategory
 	useEffect(() => {
 		navigation.setOptions({
-			headerRight: () => (
-				<Text>test</Text>
-			),
+			title: subcategory.name
 		});
 		const fetchData = async () => {
 			const newMeals = await getMealAgg(subcategory.meals)

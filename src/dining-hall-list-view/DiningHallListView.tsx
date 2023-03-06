@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { FlatList, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
-import { DiningHall, MealID, MealPeriod } from '../dataconnection/FoodScoopAppTypes/models';
+import { DiningHall, DiningHallName, MealID, MealPeriod } from '../dataconnection/FoodScoopAppTypes/models';
 import { IconItem, ListItem } from './MealItemView';
 import { Ionicons } from '@expo/vector-icons';
 import { getDiningHall } from '../dataconnection/serverMethods';
+import { convertDiningHall } from '../dataconnection/FoodScoopAppTypes/converters';
 
 const styles = StyleSheet.create({
 	cell: {
@@ -34,10 +35,11 @@ export default function DiningHallListView({ route, navigation }: { route: any, 
 	const [useListView, setView] = useState(true)
 	const [diningHall, setDiningHall] = useState<DiningHall | null>(null)
 	const [period, setPeriod] = useState<MealPeriod | null>(null)
-	const diningHallName = route.params.diningHallName
+	const diningHallName = route.params.diningHallName as DiningHallName
+	const convertedName = convertDiningHall[diningHallName]
 	useEffect(() => {
 		navigation.setOptions({
-			title: diningHallName,
+			title: convertedName,
 			headerRight: () => (
 				// TODO: other views, star, home, filter
 				<TouchableOpacity onPress={() => useListView ? setView(false) : setView(true)}>
