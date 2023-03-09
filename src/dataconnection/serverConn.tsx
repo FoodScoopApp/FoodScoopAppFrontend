@@ -9,9 +9,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Constants
 export const APIURL =
-  //   __DEV__
-  // ? "http://169.232.81.26:8080/api/v1/"
-  // :
+    __DEV__
+  ? "http://169.232.81.102:8080/api/v1/"
+  :
         "https://foodscoopapp.com/api/v1/";
 
 // Storage
@@ -48,15 +48,19 @@ export const requestBuilder = async (
   if (data) {
     if (method != "post") {
       options.params = data;
-    } else {
-      options.data = JSON.stringify(data);
     }
   }
   console.log(options.data);
 
   let resp;
   try {
-    resp = await axios[method](APIURL + endpoint, options);
+    if (method == "get") {
+      resp = await axios.get(APIURL + endpoint, options);
+    } else if (method == "post") {
+      resp = await axios.post(APIURL + endpoint, data, options);
+    } else {
+      throw errorCreator;
+    }
   } catch (err) {
     console.error(err);
     throw errorCreator("Internet");
