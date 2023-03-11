@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
     Dimensions,
     Image,
@@ -6,12 +6,14 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    View, ScrollView, Button
+    View,
+    ScrollView,
+    Button,
 } from "react-native";
-import { LinearGradient } from 'expo-linear-gradient';
-import {checkUserExists, signIn} from "../dataconnection/serverMethods";
+import { LinearGradient } from "expo-linear-gradient";
+import { signIn } from "../dataconnection/serverMethods";
 
-export default function LoginScreen({ navigation } : {navigation : any}) {
+export default function LoginScreen({ navigation }: { navigation: any }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
@@ -21,8 +23,10 @@ export default function LoginScreen({ navigation } : {navigation : any}) {
             await signIn(email, password);
             navigation.navigate("HomeScreen");
         } catch (e: any) {
-            if(e.error == "WrongPassword") alert("Incorrect email or password.");
-            else if(e.error == "NotSignedUp") alert("This user does not exist.");
+            if (e.error == "WrongPassword")
+                alert("Incorrect email or password.");
+            else if (e.error == "NotSignedUp")
+                alert("This user does not exist.");
             else alert("An error occurred while logging in.");
             navigation.navigate("HomeScreen");
         }
@@ -33,12 +37,13 @@ export default function LoginScreen({ navigation } : {navigation : any}) {
         navigation.navigate("SignupScreen");
     }
 
-    return(
+    return (
         <ScrollView>
             <View style={styles.logoView}>
                 <Image
                     source={require("../../assets/logo.png")}
-                    style={styles.image}/>
+                    style={styles.image}
+                />
                 <Text style={styles.titleText}>FoodScoop</Text>
             </View>
             <View style={styles.inputView}>
@@ -47,47 +52,50 @@ export default function LoginScreen({ navigation } : {navigation : any}) {
                     placeholder={"email"}
                     placeholderTextColor={"grey"}
                     value={email}
-                    onChangeText={setEmail}/>
+                    onChangeText={setEmail}
+                />
                 <TextInput
                     style={styles.input}
                     placeholder={"password"}
                     placeholderTextColor={"grey"}
                     value={password}
                     onChangeText={setPassword}
-                    secureTextEntry={true}/>
+                    secureTextEntry={true}
+                />
                 <LinearGradient
                     colors={["#DE6437", "#D93C78"]}
                     style={styles.loginButton}>
                     <TouchableOpacity onPress={async () => login()}>
-                        <Text style={{fontSize: 16}}>Log In</Text>
+                        <Text style={{ fontSize: 16 }}>Log In</Text>
                     </TouchableOpacity>
                 </LinearGradient>
                 <Button
                     title={"No account? Sign up!"}
                     color={"#DC5058"}
-                    onPress={() => signup()}/>
+                    onPress={() => signup()}
+                />
             </View>
         </ScrollView>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
     image: {
         width: 80,
         height: 80,
-        borderRadius: 16
+        borderRadius: 16,
     },
     titleText: {
         fontFamily: "Avenir",
         fontSize: 40,
-        marginLeft: 20
+        marginLeft: 20,
     },
     logoView: {
         alignItems: "center",
         alignSelf: "center",
         flexDirection: "row",
         width: Dimensions.get("screen").width - 50,
-        paddingTop: Dimensions.get("screen").height / 2 - 250
+        paddingTop: Dimensions.get("screen").height / 2 - 250,
     },
     inputView: {
         paddingTop: 50,
@@ -106,5 +114,5 @@ const styles = StyleSheet.create({
         padding: 10,
         alignItems: "center",
         borderRadius: 10,
-    }
+    },
 });
