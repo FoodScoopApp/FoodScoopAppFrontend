@@ -3,13 +3,14 @@ import React from 'react'
 import LoginScreen from "../auth/LoginScreen";
 import SignupScreen from "../auth/SignupScreen";
 import HomeScreen from "../main/HomeScreen";
+import DiningHallListView from '../dining-hall-list-view/DiningHallListView';
 
 import ProfileScreen from "../main/ProfileScreen";
 import PreferencesScreen from '../main/PreferencesScreen';
 
 import {NavigationContainer} from "@react-navigation/native";
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
-import DiningHallListView from "../dining-hall-list-view/DiningHallListView";
+import DiningHallSubcategoryView from '../dining-hall-subcategory-view/DiningHallSubcategoryView';
 
 const Stack = createNativeStackNavigator();
 
@@ -38,9 +39,11 @@ export default function AppNavigator() {
                     component={PreferencesScreen}
                     options={{title: "Preferences"}}/>
                 <Stack.Screen
+                    name={"DiningHallSubcategoryScreen"}
+                    component={DiningHallSubcategoryView}/>
+                <Stack.Screen
                     name={"DiningHallListView"}
-                    component={DiningHallListView}
-                    options={{title: "Dining Hall"}}/>
+                    component={DiningHallListView}/>
             </Stack.Navigator>
         </NavigationContainer>
     )
