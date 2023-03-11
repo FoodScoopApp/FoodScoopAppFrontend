@@ -8,7 +8,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Constants
-export const APIURL = "https://foodscoopapp.com/api/v2/";
+export const APIURL = "https://foodscoopapp.com/api/v1/";
 
 // Storage
 export const get = async (key: string) => await AsyncStorage.getItem(key);
