@@ -17,19 +17,23 @@ export default function LoginScreen({ navigation } : {navigation : any}) {
 
     async function login() {
         //Do login stuff here, then go to home page
+        setEmail("");
+        setPassword("");
         try {
             await signIn(email, password);
             navigation.navigate("HomeScreen");
         } catch (e: any) {
+            console.log(e);
             if(e.error == "WrongPassword") alert("Incorrect email or password.");
             else if(e.error == "NotSignedUp") alert("This user does not exist.");
             else alert("An error occurred while logging in.");
-            navigation.navigate("HomeScreen");
         }
     }
 
     function signup() {
         //Do signup stuff here, like navigate to signup page
+        setEmail("");
+        setPassword("");
         navigation.navigate("SignupScreen");
     }
 

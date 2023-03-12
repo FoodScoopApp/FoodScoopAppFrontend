@@ -1,4 +1,4 @@
-import React, { useState, Component } from 'react';
+import React, {useState, Component, useEffect} from 'react';
 import {
     Dimensions,
     StyleSheet,
@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { SelectList } from 'react-native-dropdown-select-list';
 import {set} from "../dataconnection/serverConn";
+import {getUser} from "../dataconnection/serverMethods";
 
 export default function ProfileScreen({ navigation } : {navigation: any}) {
     let [name, setName] = useState('Omar "Eado" Elamri');
@@ -21,6 +22,14 @@ export default function ProfileScreen({ navigation } : {navigation: any}) {
         {key:'5', value:'19R'},
         {key:'6', value:'19P'}
     ]
+
+    useEffect(() => {
+        async function getData() {
+            let user = await getUser();
+            setName(user.name)
+        }
+        getData()
+    })
 
     function preferences() {
         navigation.navigate("PreferencesScreen");

@@ -9,9 +9,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Constants
 export const APIURL =
-    __DEV__
-  ? "http://169.232.81.102:8080/api/v1/"
-  :
+  //   __DEV__
+  // ? "http://169.232.81.102:8080/api/v1/"
+  // :
         "https://foodscoopapp.com/api/v1/";
 
 // Storage
