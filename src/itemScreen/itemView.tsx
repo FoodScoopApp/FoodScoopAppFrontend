@@ -10,7 +10,8 @@ return(
         uri: 'https://images.squarespace-cdn.com/content/v1/57879a6cbebafb879f256735/1579721909133-R2KSZ8VGDGBI90DYATBK/header4.jpg',
         }}
         style={{
-            width: 200, 
+            alignSelf: 'center',
+            width: 300, 
             height: 200,
             borderBottomRightRadius: 10,
             borderBottomLeftRadius: 10,
