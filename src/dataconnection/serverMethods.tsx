@@ -20,6 +20,9 @@ import {
     UserResp,
     ChangeUserPropReq,
     ChangeUserPropResp,
+    ActivityLevelAggResp,
+    ActivityLevelResp,
+    ActivityLevelReq,
 } from "./FoodScoopAppTypes/re";
 import { set, requestBuilder, getJSON, setJSON } from "./serverConn";
 import { dateFormat } from "./FoodScoopAppTypes/converters";
@@ -181,4 +184,14 @@ export const getCurrentMealPeriodForDiningHall = (diningHall: DiningHall) => {
     }
 
     return null;
+};
+
+export const getActivityLevels = async () => {
+    const resp: ActivityLevelAggResp = await requestBuilder("get", "activity", {});
+    return resp
+};
+
+export const getActivityLevel = async (diningHall: DiningHallName) => {
+    const resp: ActivityLevelResp = await requestBuilder("get", "activity", {diningHall: diningHall});
+    return resp
 };
