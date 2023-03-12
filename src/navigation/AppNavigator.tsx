@@ -13,6 +13,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import DiningHallSubcategoryView from "../dining-hall-subcategory-view/DiningHallSubcategoryView";
 import { getUser } from "../dataconnection/serverMethods";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { DiningHallName, Subcategory } from "../dataconnection/FoodScoopAppTypes/models";
 
 export type RootStackParamList = {
     LoginScreen: undefined;
@@ -20,8 +21,8 @@ export type RootStackParamList = {
     HomeScreen: undefined;
     ProfileScreen: undefined;
     PreferencesScreen: undefined;
-    DiningHallSubcategoryScreen: undefined;
-    DiningHallListView: { diningHallName: string };
+    DiningHallSubcategoryScreen: { subcategory: Subcategory };
+    DiningHallListView: { diningHallName: DiningHallName };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();

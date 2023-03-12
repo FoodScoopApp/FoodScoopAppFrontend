@@ -66,7 +66,9 @@ export const getDiningHall = async (
     force = false
 ): Promise<DiningHall> => {
     if (!force) {
-        const dh = await getJSON(diningHallName);
+        const dh = await getJSON(
+            diningHallName + moment(date).format(dateFormat)
+        );
         if (dh) return dh;
     }
     const req: DiningHallReq = {
@@ -75,7 +77,7 @@ export const getDiningHall = async (
     };
     const resp: DiningHallResp = await requestBuilder("get", "dininghall", req);
 
-    setJSON(diningHallName, resp.diningHall);
+    setJSON(diningHallName + moment(date).format(dateFormat), resp.diningHall);
 
     return resp.diningHall;
 };
@@ -149,7 +151,9 @@ export const getFilledDiningHall = async (
     force = false
 ): Promise<DiningHall> => {
     if (!force) {
-        const dh = await getJSON(diningHallName + "filled");
+        const dh = await getJSON(
+            diningHallName + moment(date).format(dateFormat) + "filled"
+        );
         if (dh) return dh;
     }
     const diningHall = await getDiningHall(diningHallName, date, force);
@@ -167,7 +171,7 @@ export const getFilledDiningHall = async (
         }
     }
 
-    setJSON(diningHallName + "filled", diningHall);
+    setJSON(diningHallName + diningHall.date + "filled", diningHall);
 
     return diningHall;
 };
@@ -196,11 +200,17 @@ export const getCurrentMealPeriodForDiningHall = (diningHall: DiningHall) => {
 };
 
 export const getActivityLevels = async () => {
-    const resp: ActivityLevelAggResp = await requestBuilder("get", "activity", {});
-    return resp
+    const resp: ActivityLevelAggResp = await requestBuilder(
+        "get",
+        "activity",
+        {}
+    );
+    return resp;
 };
 
 export const getActivityLevel = async (diningHall: DiningHallName) => {
-    const resp: ActivityLevelResp = await requestBuilder("get", "activity", {diningHall: diningHall});
-    return resp
+    const resp: ActivityLevelResp = await requestBuilder("get", "activity", {
+        diningHall: diningHall,
+    });
+    return resp;
 };

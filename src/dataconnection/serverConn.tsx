@@ -85,6 +85,7 @@ export const requestBuilder = async (
             if (error.response.status > 0 && error.response.status < 400) {
                 throw errorCreator("InternalServer"); // if sending success, but bad data, definitely a server error
             } else if (error.response.status < 500) {
+                console.log("bad")
                 throw errorCreator("BadRequest");
             } else {
                 throw errorCreator("Internet");
@@ -103,11 +104,14 @@ export const requestBuilder = async (
     }
 
     try {
-        const data = resp.data;
-        if (handleError && data.error)
-            throw errorCreator(data.error, data.message ? data.message : null);
+        const dataresp = resp.data;
+        if (handleError && dataresp.error)
+            throw errorCreator(dataresp.error, dataresp.message ? dataresp.message : null);
 
-        return data;
+        console.log(endpoint)
+        console.log(data)
+        console.log(dataresp)
+        return dataresp;
     } catch (err) {
         console.error(err);
     }

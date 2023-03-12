@@ -13,9 +13,10 @@ type BetterImageProps = {
     style: StyleProp<ImageStyle>;
 };
 export default function BetterImage(props: BetterImageProps) {
-    const [source, setSource] = useState(require("../../assets/place.png"));
+    const [source, setSource] = useState("");
 
     useEffect(() => {
+        console.log(props)
         const effect = async () => {
             if (
                 props.source &&
@@ -27,8 +28,9 @@ export default function BetterImage(props: BetterImageProps) {
                 let imgdata = await get(uri);
 
                 if (imgdata) {
+                    console.log("cached");
+                    setSource(imgdata);
                     console.log(imgdata);
-                    setSource({ uri: imgdata });
                 } else {
                     const toDataURL = (url: string): Promise<string | null> =>
                         fetch(url)
@@ -54,22 +56,18 @@ export default function BetterImage(props: BetterImageProps) {
                     toDataURL(uri).then((dataurl) => {
                         if (
                             !dataurl ||
-                            dataurl.length < 50 ||
                             dataurl.startsWith("data:text/html")
                         )
                             return;
-                        console.log(dataurl.substring(0, 20));
                         set(uri, dataurl);
-                        setSource({ uri: dataurl });
+                        setSource(dataurl);
                     });
                 }
-            } else if (props.source) {
-                setSource(props.source);
             }
         };
 
         effect();
-    }, []);
+    });
 
-    return <Image source={source} style={props.style} />;
+    return <Image source={source ? {uri: source} : require("../../assets/place.png")} style={props.style} />;
 }
