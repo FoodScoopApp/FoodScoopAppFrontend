@@ -24,12 +24,16 @@ import {
 import {
     getCurrentMealPeriodForDiningHall,
     getFilledDiningHall,
+    getActivityLevels,
 } from "../dataconnection/serverMethods";
 import BetterImage from "../common/BetterImage";
+import { ActivityLevelAggResp } from "../dataconnection/FoodScoopAppTypes/re";
+import * as Progress from "react-native-progress";
 
 type Props = NativeStackScreenProps<RootStackParamList, "HomeScreen">;
 export default function HomeScreen({ navigation }: Props) {
     const [diningHalls, setDiningHalls] = useState([] as DiningHall[]);
+    const [levels, setLevels] = useState<ActivityLevelAggResp | null>(null);
 
     useEffect(() => {
         navigation.setOptions({
@@ -66,7 +70,15 @@ export default function HomeScreen({ navigation }: Props) {
             }
         };
 
+        const getLevels = async () => {
+            const newLevels = await getActivityLevels();
+            setLevels(newLevels);
+        };
+
         getDHs();
+
+        getLevels();
+        setInterval(getLevels, 1000 * 60);
     }, []);
     return (
         <ScrollView>
@@ -124,27 +136,57 @@ export default function HomeScreen({ navigation }: Props) {
                     const mp = getCurrentMealPeriodForDiningHall(dh);
 
                     const title = (
-                        <TouchableOpacity
+                        <View
                             style={{
                                 flexDirection: "row",
                                 alignItems: "center",
-                            }}
-                            onPress={() =>
-                                navigation.navigate("DiningHallListView", {
-                                    diningHallName: dh.name,
-                                })
-                            }>
-                            <Text style={styles.restaurantName}>
-                                {convertDiningHall[dh.name] +
-                                    (mp
-                                        ? " - " + convertMealPeriods[mp.name]
-                                        : "")}
-                            </Text>
-                            <Ionicons
-                                name={"chevron-forward-outline"}
-                                size={20}
-                            />
-                        </TouchableOpacity>
+                                justifyContent: "space-between",
+                            }}>
+                            <TouchableOpacity
+                                style={{
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                }}
+                                onPress={() =>
+                                    navigation.navigate("DiningHallListView", {
+                                        diningHallName: dh.name,
+                                    })
+                                }>
+                                <Text style={styles.restaurantName}>
+                                    {convertDiningHall[dh.name] +
+                                        (mp
+                                            ? " - " +
+                                              convertMealPeriods[mp.name]
+                                            : "")}
+                                </Text>
+                                <Ionicons
+                                    name={"chevron-forward-outline"}
+                                    size={20}
+                                />
+                            </TouchableOpacity>
+                            <View
+                                style={{
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    marginHorizontal: 20,
+                                }}>
+                                { levels && levels[dh.name] ?
+                                    <View
+                                        style={{
+                                            flexDirection: "row",
+                                            alignItems: "center"
+                                        }}>
+                                        <Progress.Bar
+                                            progress={levels[dh.name]! / 100}
+                                            width={128}
+                                            color="#DB4D5B"
+                                        />
+                                        <Text style={{ marginHorizontal: 4 }}>
+                                            {levels[dh.name]}%
+                                        </Text>
+                                    </View> : null }
+                            </View>
+                        </View>
                     );
                     if (!mp)
                         return (
@@ -180,51 +222,6 @@ export default function HomeScreen({ navigation }: Props) {
                         </Fragment>
                     );
                 })}
-                {/* <TouchableOpacity
-                    style={{ flexDirection: "row", alignItems: "center" }}
-                    onPress={() =>
-                        navigation.navigate("DiningHallListView", {
-                            diningHallName: "BP",
-                        })
-                    }>
-                    <Text style={styles.restaurantName}>Bruin Plate</Text>
-                    <Ionicons name={"chevron-forward-outline"} size={20} />
-                </TouchableOpacity>
-                <FlatList
-                    data={bplateFood}
-                    horizontal={true}
-                    renderItem={({ item }) => <Item name={item} />}
-                />
-                <TouchableOpacity
-                    style={{ flexDirection: "row", alignItems: "center" }}
-                    onPress={() =>
-                        navigation.navigate("DiningHallListView", {
-                            diningHallName: "DN",
-                        })
-                    }>
-                    <Text style={styles.restaurantName}>De Neve</Text>
-                    <Ionicons name={"chevron-forward-outline"} size={20} />
-                </TouchableOpacity>
-                <FlatList
-                    data={deneveFood}
-                    horizontal={true}
-                    renderItem={({ item }) => <Item name={item} />}
-                />
-                <TouchableOpacity
-                    style={{ flexDirection: "row", alignItems: "center" }}
-                    onPress={() =>
-                        navigation.navigate("DiningHallListView", {
-                            diningHallName: "EA",
-                        })
-                    }>
-                    <Text style={styles.restaurantName}>Epicuria</Text>
-                    <Ionicons name={"chevron-forward-outline"} size={20} />
-                </TouchableOpacity>
-                <FlatList
-                    data={epicFood}
-                    horizontal={true}
-                    renderItem={({ item }) => <Item name={item} />}
-                /> */}
             </View>
         </ScrollView>
     );
