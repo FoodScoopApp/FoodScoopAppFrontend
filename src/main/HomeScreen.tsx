@@ -80,7 +80,10 @@ export default function HomeScreen({ navigation } : {navigation : any}) {
 			</TouchableOpacity>
 			<View style={{flexDirection: "row", alignItems: "center", marginHorizontal: 20}}>
 				{ levels?.BP
-					? <Progress.Bar progress={levels.BP / 100} width={128} color="#DB4D5B" />
+					? <View style={{flexDirection: "row", alignItems: "center"}}>
+						<Progress.Bar progress={levels.BP / 100} width={128} color="#DB4D5B" />
+						<Text style={{marginHorizontal: 4}}>{levels.BP}%</Text>
+					</View>
 					: <View/>}
 			</View>
 		</View>
@@ -94,7 +97,10 @@ export default function HomeScreen({ navigation } : {navigation : any}) {
 			</TouchableOpacity>
 			<View style={{flexDirection: "row", alignItems: "center", marginHorizontal: 20}}>
 				{ levels?.DN
-					? <Progress.Bar progress={levels.DN / 100} width={128} color="#DB4D5B" />
+					? <View style={{flexDirection: "row", alignItems: "center"}}>
+						<Progress.Bar progress={levels.DN / 100} width={128} color="#DB4D5B" />
+						<Text style={{marginHorizontal: 4}}>{levels.DN}%</Text>
+					</View>
 					: <View/>}
 			</View>
 		</View>
@@ -108,7 +114,10 @@ export default function HomeScreen({ navigation } : {navigation : any}) {
 			</TouchableOpacity>
 			<View style={{flexDirection: "row", alignItems: "center", marginHorizontal: 20}}>
 				{ levels?.EC
-					? <Progress.Bar progress={levels.EC / 100} width={128} color="#DB4D5B" />
+					? <View style={{flexDirection: "row", alignItems: "center"}}>
+						<Progress.Bar progress={levels.EC / 100} width={128} color="#DB4D5B" />
+						<Text style={{marginHorizontal: 4}}>{levels.EC}%</Text>
+					</View>
 					: <View/>}
 			</View>
 		</View>
