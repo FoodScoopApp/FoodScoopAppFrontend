@@ -35,6 +35,10 @@ export default function ProfileScreen({ navigation } : {navigation: any}) {
         navigation.navigate("PreferencesScreen");
     }
 
+    function restrictions() {
+        navigation.navigate("RestrictionsScreen");
+    }
+
     function signOut() {
         set("email", "");
         set("token", "");
@@ -68,11 +72,8 @@ export default function ProfileScreen({ navigation } : {navigation: any}) {
             <TouchableOpacity style={styles.menuButton} onPress={() => preferences()}>
                 <Text>Preferences</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menuButton}>
+            <TouchableOpacity style={styles.menuButton} onPress={() => restrictions()}>
                 <Text>Dietary Restrictions</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.menuButton}>
-                <Text>Nutritional Information</Text>
             </TouchableOpacity>
             <Button title={"Sign Out"}
                     onPress={() => signOut()}/>

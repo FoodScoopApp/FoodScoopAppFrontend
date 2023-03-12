@@ -13,6 +13,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import DiningHallSubcategoryView from "../dining-hall-subcategory-view/DiningHallSubcategoryView";
 import { getUser } from "../dataconnection/serverMethods";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import RestrictionsScreen from "../main/RestrictionsScreen";
 
 export type RootStackParamList = {
     LoginScreen: undefined;
@@ -20,6 +21,7 @@ export type RootStackParamList = {
     HomeScreen: undefined;
     ProfileScreen: undefined;
     PreferencesScreen: undefined;
+    RestrictionsScreen: undefined;
     DiningHallSubcategoryScreen: undefined;
     DiningHallListView: { diningHallName: string };
 };
@@ -57,6 +59,12 @@ export default function AppNavigator() {
             name={"PreferencesScreen"}
             component={PreferencesScreen}
             options={{ title: "Preferences" }}
+        />,
+        <Stack.Screen
+            key={4}
+            name={"RestrictionsScreen"}
+            component={RestrictionsScreen}
+            options={{ title: "Dietary Restrictions" }}
         />,
         <Stack.Screen
             key={5}
