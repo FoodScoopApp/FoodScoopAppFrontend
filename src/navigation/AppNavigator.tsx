@@ -4,6 +4,7 @@ import LoginScreen from "../auth/LoginScreen";
 import SignupScreen from "../auth/SignupScreen";
 import HomeScreen from "../main/HomeScreen";
 import modalView from "../modal/modalView";
+import itemView from "../itemScreen/itemView"
 
 
 import {NavigationContainer} from "@react-navigation/native";
@@ -15,6 +16,10 @@ export default function AppNavigator() {
     return(
         <NavigationContainer>
             <Stack.Navigator>
+                <Stack.Screen
+                    name={"itemView"}
+                    component={itemView}
+                    options={{title: "Item Screen"}}/>
                 <Stack.Screen
                     name={"modalView"}
                     component={modalView}
