@@ -3,6 +3,7 @@ import React from 'react'
 import LoginScreen from "../auth/LoginScreen";
 import SignupScreen from "../auth/SignupScreen";
 import HomeScreen from "../main/HomeScreen";
+import modalView from "../modal/modalView";
 
 
 import {NavigationContainer} from "@react-navigation/native";
@@ -14,6 +15,10 @@ export default function AppNavigator() {
     return(
         <NavigationContainer>
             <Stack.Navigator>
+                <Stack.Screen
+                    name={"modalView"}
+                    component={modalView}
+                    options={{title: "Filter Screen"}}/>
                 <Stack.Screen
                     name={"LoginScreen"}
                     component={LoginScreen}
