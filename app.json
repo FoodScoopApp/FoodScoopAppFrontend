@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "FoodScoopAppFrontend",
-    "slug": "FoodScoopAppFrontend",
+    "slug": "foodscoop",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/logo.png",
@@ -28,6 +28,12 @@
     },
     "web": {
       "favicon": "./assets/logo.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "1373a54c-dda8-4143-b66d-a03ee1986f76"
+      }
+    },
+    "owner": "weitcis"
   }
 }
