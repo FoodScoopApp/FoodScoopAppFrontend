@@ -10,23 +10,26 @@ import {
 } from 'react-native';
 import { SelectList } from 'react-native-dropdown-select-list';
 import {set} from "../dataconnection/serverConn";
-import {getUser} from "../dataconnection/serverMethods";
+import {changeUserProp, getUser} from "../dataconnection/serverMethods";
+import {MealPlan, User} from "../dataconnection/FoodScoopAppTypes/models";
 
 export default function ProfileScreen({ navigation } : {navigation: any}) {
-    let [name, setName] = useState('');
+    let [user, setUser] = useState<User>();
+    const [mealPlan, setMealPlan] = useState("");
+
     const data = [
         {key:'1', value:'11'},
         {key:'2', value:'14'},
-        {key:'3', value:'19'},
+        {key:'3', value:'19'}
     ]
 
     useEffect(() => {
         async function getData() {
             let user = await getUser();
-            setName(user.name)
+            setUser(user)
         }
         getData()
-    })
+    }, [])
 
     function preferences() {
         navigation.navigate("PreferencesScreen");
@@ -45,7 +48,7 @@ export default function ProfileScreen({ navigation } : {navigation: any}) {
                 <Image
                     source={require("../../assets/logo.png")}
                     style={styles.image} />
-                <Text>{name}</Text>
+                <Text>{user ? user.name : "Loading..."}</Text>
             </View>
             <View style={styles.diningPlanView}>
                 <Text style={{paddingTop: 12}}>Dining Plan</Text>
@@ -53,7 +56,13 @@ export default function ProfileScreen({ navigation } : {navigation: any}) {
                     data={data}
                     search={false}
                     save="value"
-                    setSelected={() => {}}
+                    setSelected={async (val: any) => {
+                        setMealPlan(val as MealPlan)
+                        await changeUserProp({mealPlan: val as MealPlan})
+                        let user = await getUser();
+                        setUser(user);
+
+                    }}
                 />
             </View>
             <TouchableOpacity style={styles.menuButton} onPress={() => preferences()}>

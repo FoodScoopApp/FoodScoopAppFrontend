@@ -15,12 +15,20 @@ import {
     Keyboard,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { signIn } from "../dataconnection/serverMethods";
-import { convertErrorCode } from "../dataconnection/FoodScoopAppTypes/converters";
+import {getActivityLevels, getFilledDiningHall, signIn} from "../dataconnection/serverMethods";
+import {convertDiningHall, convertErrorCode} from "../dataconnection/FoodScoopAppTypes/converters";
+import {Ionicons} from "@expo/vector-icons";
+import {DiningHallName} from "../dataconnection/FoodScoopAppTypes/models";
 
 export default function LoginScreen({ navigation }: { navigation: any }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    useEffect(() => {
+        navigation.setOptions({
+            headerBackVisible: false,
+        });
+    }, []);
 
     async function login() {
         //Do login stuff here, then go to home page

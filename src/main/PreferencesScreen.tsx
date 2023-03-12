@@ -3,7 +3,7 @@ import {
     ScrollView,
     View,
     Text,
-    StyleSheet
+    StyleSheet, FlatList
 } from 'react-native';
 import { MultipleSelectList } from 'react-native-dropdown-select-list';
 import Icon from 'react-native-ionicons';
@@ -13,21 +13,27 @@ import {convertDiningHall, getKeyByValue} from "../dataconnection/FoodScoopAppTy
 import {resolveAllWorkspacePackageJsonPaths} from "@expo/metro-config/build/getWatchFolders";
 
 export default function PreferencesScreen({ navigation } : {navigation : any}) {
-    //const [pullData, setPullData] = useState<DiningHallName[] | undefined>([]);
+    const [pullData, setPullData] = useState<DiningHallName[] | [string]>(["No dining halls set"]);
     const [selected, setSelected] = useState([]);
     const [user, setUser] = useState<User | undefined>(undefined)
+
     const data = [
         {key: '1', value: "Bruin Plate"},
-        {key: '2', value: "Epicuria"},
-        {key: '3', value: "De Neve"}
+        {key: '2', value: "Epicuria at Covel"},
+        {key: '3', value: "De Neve"},
+        {key: '4', value: "Rendezvous West"},
+        {key: '5', value: "Rendezvous East"},
+        {key: '6', value: "Bruin Cafe"},
+        {key: '7', value: "Epicuria at Ackerman"},
+        {key: '8', value: "Study at Hedrick"},
+        {key: '9', value: "The Drey"}
     ]
 
     useEffect(() => {
         async function getData() {
             let user = await getUser();
             setUser(user);
-            console.log(user);
-            //setPullData(user ? user.favDiningHalls : []);
+            setPullData((user ? user.favDiningHalls : ["No dining halls set"])!);
         }
         getData()
     }, [])
@@ -45,12 +51,24 @@ export default function PreferencesScreen({ navigation } : {navigation : any}) {
                     toDiningHalls = toDiningHalls.filter(function( element ) {
                         return element !== undefined;
                     });
-
                     await changeUserProp({favDiningHalls: toDiningHalls})
+                    let user = await getUser();
+                    setUser(user);
+                    setPullData((user ? user.favDiningHalls : ["No dining halls set"])!);
                 }}
                 data={data}
                 save="value"
             />
+            <View>
+                <Text style={styles.dhHeader}>Favorite Dining Halls:</Text>
+                {pullData.map((dh) => {
+                    return (
+                        <View>
+                            <Text style={styles.dhItem}>{convertDiningHall[dh as DiningHallName]}</Text>
+                        </View>
+                    );
+                })}
+            </View>
         </ScrollView>
     )
 }
@@ -117,5 +135,15 @@ const styles = StyleSheet.create({
         padding: 10,
         alignItems: "center",
         borderRadius: 10,
+    },
+    dhHeader: {
+        fontWeight: "bold",
+        fontSize: 24,
+        margin: 10
+    },
+    dhItem: {
+        fontSize: 16,
+        marginTop: 5,
+        marginLeft: 10
     }
 });
