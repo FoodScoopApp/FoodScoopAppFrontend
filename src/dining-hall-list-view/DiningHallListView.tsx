@@ -48,7 +48,7 @@ export default function DiningHallListView({ route, navigation }: { route: any, 
 			),
 		});
 		const fetchDiningHall = async () => {
-			const diningHall = await getDiningHall(diningHallName)
+			const diningHall = await getDiningHall(diningHallName, new Date())
 			const currentPeriod = getPeriod(diningHall)
 			setDiningHall(diningHall)
 			setPeriod(currentPeriod)

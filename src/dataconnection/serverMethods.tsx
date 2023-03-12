@@ -144,7 +144,7 @@ export const getFilledDiningHall = async (
     diningHallName: DiningHallName,
     date: Date,
     force = false
-) => {
+): Promise<DiningHall> => {
     if (!force) {
         const dh = await getJSON(diningHallName + "filled");
         if (dh) return dh;
@@ -176,6 +176,15 @@ export const getCurrentMealPeriodForDiningHall = (diningHall: DiningHall) => {
         const end = moment(mp.endTime, "H:mm");
 
         if (now.diff(start) > 0 && end.diff(now) > 0) {
+            return mp;
+        }
+    }
+
+    for (let mp of diningHall.mealPeriods) {
+        const now = moment();
+        const end = moment(mp.endTime, "H:mm");
+
+        if (end.diff(now) > 0) {
             return mp;
         }
     }

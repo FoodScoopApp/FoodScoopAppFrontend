@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import {
     ErrorCode,
     Endpoint,
@@ -16,18 +16,18 @@ export const set = async (key: string, data: string) =>
     await AsyncStorage.setItem(key, data);
 
 export const getJSON = async (key: string) => {
-  const data = await get(key);
-  if (!data) return null;
-  try {
-    return JSON.parse(data);
-  } catch {
-    return null;
-  }
-}
+    const data = await get(key);
+    if (!data) return null;
+    try {
+        return JSON.parse(data);
+    } catch {
+        return null;
+    }
+};
 export const setJSON = async (key: string, data: any) => {
-  const datastr = JSON.stringify(data);
-  await set(key, datastr);
-}
+    const datastr = JSON.stringify(data);
+    await set(key, datastr);
+};
 
 // Errors
 export const errorCreator = (code: ErrorCode, message?: any) => {
@@ -68,10 +68,37 @@ export const requestBuilder = async (
         } else if (method == "post") {
             resp = await axios.post(APIURL + endpoint, data, options);
         } else {
-            throw errorCreator;
+            throw errorCreator("BadRequest");
         }
     } catch (err) {
-        console.error(err);
+        const error = err as AxiosError;
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+
+            const resp = error.response.data as any;
+
+            if (resp && resp.error) {
+                throw errorCreator(resp.error);
+            }
+
+            if (error.response.status > 0 && error.response.status < 400) {
+                throw errorCreator("InternalServer"); // if sending success, but bad data, definitely a server error
+            } else if (error.response.status < 500) {
+                throw errorCreator("BadRequest");
+            } else {
+                throw errorCreator("Internet");
+            }
+        } else if (error.request) {
+            // The request was made but no response was received
+            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+            // http.ClientRequest in node.js
+            console.error(error.request);
+        } else {
+            // Something happened in setting up the request that triggered an Error
+            console.error("Error", error.message);
+        }
+        console.error(error.config);
         throw errorCreator("Internet");
     }
 
@@ -83,12 +110,5 @@ export const requestBuilder = async (
         return data;
     } catch (err) {
         console.error(err);
-        if (resp.status > 0 && resp.status < 400) {
-            throw errorCreator("InternalServer"); // if sending success, but bad data, definitely a server error
-        } else if (resp.status < 500) {
-            throw errorCreator("BadRequest");
-        } else {
-            throw errorCreator("InternalServer");
-        }
     }
 };

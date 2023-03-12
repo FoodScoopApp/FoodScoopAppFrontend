@@ -12,14 +12,11 @@ import { SelectList } from 'react-native-dropdown-select-list';
 import {set} from "../dataconnection/serverConn";
 
 export default function ProfileScreen({ navigation } : {navigation: any}) {
-    let [name, setName] = useState('Omar "Eado" Elamri');
+    let [name, setName] = useState('');
     const data = [
-        {key:'1', value:'11R'},
-        {key:'2', value:'11P'},
-        {key:'3', value:'14R'},
-        {key:'4', value:'14P'},
-        {key:'5', value:'19R'},
-        {key:'6', value:'19P'}
+        {key:'1', value:'11'},
+        {key:'2', value:'14'},
+        {key:'3', value:'19'},
     ]
 
     function preferences() {
@@ -27,8 +24,8 @@ export default function ProfileScreen({ navigation } : {navigation: any}) {
     }
 
     function signOut() {
-        set("email", null);
-        set("token", null);
+        set("email", "");
+        set("token", "");
 
         navigation.navigate("LoginScreen");
     }
@@ -47,7 +44,7 @@ export default function ProfileScreen({ navigation } : {navigation: any}) {
                     data={data}
                     search={false}
                     save="value"
-                    style={styles.diningPlanSelector}
+                    setSelected={() => {}}
                 />
             </View>
             <TouchableOpacity style={styles.menuButton} onPress={() => preferences()}>
@@ -98,7 +95,7 @@ const styles = StyleSheet.create({
         paddingBottom: 25
     },
     diningPlanSelector: {
-        flexGrow: 9,
+        // flexGrow: 9,
     },
     menuButton: {
         width: "100%",

@@ -1,10 +1,28 @@
-import React, {useState} from "react";
-import {Button, Dimensions, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
-import {MultipleSelectList, SelectList} from "react-native-dropdown-select-list/index";
-import {LinearGradient} from "expo-linear-gradient";
-import {signIn, signUp} from "../dataconnection/serverMethods";
+import React, { useState } from "react";
+import {
+    Button,
+    Dimensions,
+    Image,
+    Keyboard,
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+    View,
+} from "react-native";
+import {
+    MultipleSelectList,
+    SelectList,
+} from "react-native-dropdown-select-list/index";
+import { LinearGradient } from "expo-linear-gradient";
+import { signIn, signUp } from "../dataconnection/serverMethods";
+import { convertErrorCode } from "../dataconnection/FoodScoopAppTypes/converters";
 
-export default function SignupScreen({ navigation } : {navigation : any}) {
+export default function SignupScreen({ navigation }: { navigation: any }) {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -15,8 +33,7 @@ export default function SignupScreen({ navigation } : {navigation : any}) {
             await signUp(email, name, password);
             navigation.navigate("HomeScreen");
         } catch (e: any) {
-            if(e.error == "AlreadyExists") alert("An account with this username already exists.");
-            else alert("An error occurred when signing up.");
+            alert(convertErrorCode(e.code));
         }
     }
 
@@ -50,89 +67,106 @@ export default function SignupScreen({ navigation } : {navigation : any}) {
     //     {key:'AFSH', value: "Fish Allergy"}
     // ]
 
-    return(
-        <ScrollView>
-            <View style={styles.logoView}>
-                <Image
-                    source={require("../../assets/logo.png")}
-                    style={styles.image}/>
-                <Text style={styles.titleText}>FoodScoop</Text>
-            </View>
-            <TextInput
-                style={styles.input}
-                placeholder={"email"}
-                placeholderTextColor={"grey"}
-                value={email}
-                onChangeText={setEmail}/>
-            <TextInput
-                style={styles.input}
-                placeholder={"name"}
-                placeholderTextColor={"grey"}
-                value={name}
-                onChangeText={setName}/>
-            <TextInput
-                style={styles.input}
-                placeholder={"password"}
-                placeholderTextColor={"grey"}
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry={true}/>
+    return (
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={{ flex: 1 }}>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <View style={styles.outer}>
+                    <View style={styles.logoView}>
+                        <Image
+                            source={require("../../assets/logo.png")}
+                            style={styles.image}
+                        />
+                        <Text style={styles.titleText}>FoodScoop</Text>
+                    </View>
+                    <TextInput
+                        style={styles.input}
+                        placeholder={"email"}
+                        placeholderTextColor={"grey"}
+                        value={email}
+                        onChangeText={setEmail}
+                    />
+                    <TextInput
+                        style={styles.input}
+                        placeholder={"name"}
+                        placeholderTextColor={"grey"}
+                        value={name}
+                        onChangeText={setName}
+                    />
+                    <TextInput
+                        style={styles.input}
+                        placeholder={"password"}
+                        placeholderTextColor={"grey"}
+                        value={password}
+                        onChangeText={setPassword}
+                        secureTextEntry={true}
+                    />
 
-            {/*<View style={styles.nameView}>*/}
-            {/*    <Text style={styles.text}>Name:</Text>*/}
-            {/*    <TextInput*/}
-            {/*        style={styles.input}*/}
-            {/*        placeholder={"name"}*/}
-            {/*        placeholderTextColor={"grey"}*/}
-            {/*        value={name}*/}
-            {/*        onChangeText={setName}/>*/}
-            {/*</View>*/}
-            {/*<SelectList*/}
-            {/*    boxStyles={styles.selectList}*/}
-            {/*    setSelected={(val: any) => setMealPlan(val)}*/}
-            {/*    data={meal_plans}*/}
-            {/*    save="value"*/}
-            {/*    search={false}*/}
-            {/*    placeholder={"Select Meal Plan"}*/}
-            {/*/>*/}
-            {/*<MultipleSelectList*/}
-            {/*    boxStyles={styles.selectList}*/}
-            {/*    setSelected={(val: any) => setRestrictions(val)}*/}
-            {/*    data={diet_restrict}*/}
-            {/*    save="value"*/}
-            {/*    onSelect={() => alert(restrictions)}*/}
-            {/*    label="Categories"*/}
-            {/*    placeholder={"Select Dietary Restrictions"}*/}
-            {/*/>*/}
-            <LinearGradient
-                colors={["#DE6437", "#D93C78"]}
-                style={styles.loginButton}>
-                <TouchableOpacity onPress={async () => await createAccount()}>
-                    <Text style={{fontSize: 16}}>Create Account!</Text>
-                </TouchableOpacity>
-            </LinearGradient>
-        </ScrollView>
-    )
+                    {/*<View style={styles.nameView}>*/}
+                    {/*    <Text style={styles.text}>Name:</Text>*/}
+                    {/*    <TextInput*/}
+                    {/*        style={styles.input}*/}
+                    {/*        placeholder={"name"}*/}
+                    {/*        placeholderTextColor={"grey"}*/}
+                    {/*        value={name}*/}
+                    {/*        onChangeText={setName}/>*/}
+                    {/*</View>*/}
+                    {/*<SelectList*/}
+                    {/*    boxStyles={styles.selectList}*/}
+                    {/*    setSelected={(val: any) => setMealPlan(val)}*/}
+                    {/*    data={meal_plans}*/}
+                    {/*    save="value"*/}
+                    {/*    search={false}*/}
+                    {/*    placeholder={"Select Meal Plan"}*/}
+                    {/*/>*/}
+                    {/*<MultipleSelectList*/}
+                    {/*    boxStyles={styles.selectList}*/}
+                    {/*    setSelected={(val: any) => setRestrictions(val)}*/}
+                    {/*    data={diet_restrict}*/}
+                    {/*    save="value"*/}
+                    {/*    onSelect={() => alert(restrictions)}*/}
+                    {/*    label="Categories"*/}
+                    {/*    placeholder={"Select Dietary Restrictions"}*/}
+                    {/*/>*/}
+                    <LinearGradient
+                        colors={["#DE6437", "#D93C78"]}
+                        style={styles.loginButton}>
+                        <TouchableOpacity
+                            onPress={async () => await createAccount()}>
+                            <Text style={{ fontSize: 16 }}>
+                                Create Account!
+                            </Text>
+                        </TouchableOpacity>
+                    </LinearGradient>
+                </View>
+            </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
+    );
 }
 
 const styles = StyleSheet.create({
+    outer: {
+        flex: 1,
+        justifyContent: "center",
+    },
     image: {
         width: 80,
         height: 80,
-        borderRadius: 16
+        borderRadius: 16,
     },
     titleText: {
         fontFamily: "Avenir",
         fontSize: 40,
-        marginLeft: 20
+        marginLeft: 20,
     },
     logoView: {
         alignItems: "center",
         alignSelf: "center",
         flexDirection: "row",
-        width: Dimensions.get("screen").width - 50,
-        paddingTop: Dimensions.get("screen").height / 2 - 250,
-        paddingBottom: 40
+        // width: Dimensions.get("screen").width - 50,
+        // paddingTop: Dimensions.get("screen").height / 2 - 250,
+        paddingBottom: 40,
     },
     nameView: {
         flexDirection: "row",
@@ -143,11 +177,11 @@ const styles = StyleSheet.create({
     text: {
         flexGrow: 1,
         paddingLeft: 30,
-        fontSize: 18
+        fontSize: 18,
     },
     input: {
-        alignSelf: "stretch",
-        flexGrow: 9,
+        // alignSelf: "stretch",
+        // flexGrow: 9,
         height: 40,
         margin: 12,
         marginHorizontal: 30,
@@ -156,7 +190,7 @@ const styles = StyleSheet.create({
     },
     selectList: {
         marginHorizontal: 30,
-        marginVertical: 10
+        marginVertical: 10,
     },
     loginButton: {
         height: 40,
@@ -165,5 +199,5 @@ const styles = StyleSheet.create({
         padding: 10,
         alignItems: "center",
         borderRadius: 10,
-    }
-})
+    },
+});
