@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     ScrollView,
     View,
@@ -7,18 +7,47 @@ import {
 } from 'react-native';
 import { MultipleSelectList } from 'react-native-dropdown-select-list';
 import Icon from 'react-native-ionicons';
+import {changeUserProp, getUser} from "../dataconnection/serverMethods";
+import {DiningHall, DiningHallName, User} from "../dataconnection/FoodScoopAppTypes/models";
+import {convertDiningHall, getKeyByValue} from "../dataconnection/FoodScoopAppTypes/converters";
+import {resolveAllWorkspacePackageJsonPaths} from "@expo/metro-config/build/getWatchFolders";
 
 export default function PreferencesScreen({ navigation } : {navigation : any}) {
+    //const [pullData, setPullData] = useState<DiningHallName[] | undefined>([]);
     const [selected, setSelected] = useState([]);
+    const [user, setUser] = useState<User | undefined>(undefined)
     const data = [
         {key: '1', value: "Bruin Plate"},
         {key: '2', value: "Epicuria"},
         {key: '3', value: "De Neve"}
     ]
+
+    useEffect(() => {
+        async function getData() {
+            let user = await getUser();
+            setUser(user);
+            console.log(user);
+            //setPullData(user ? user.favDiningHalls : []);
+        }
+        getData()
+    }, [])
+
     return (
         <ScrollView>
             <MultipleSelectList
-                setSelected={(val) => setSelected(val)}
+                setSelected={async (val: any) => {
+                    setSelected(val);
+                    let toDiningHalls: DiningHallName[] = []
+                    selected.forEach((sel) => {
+                        let currentDH: DiningHallName = getKeyByValue(convertDiningHall, sel) as DiningHallName;
+                        toDiningHalls.push(currentDH);
+                    })
+                    toDiningHalls = toDiningHalls.filter(function( element ) {
+                        return element !== undefined;
+                    });
+
+                    await changeUserProp({favDiningHalls: toDiningHalls})
+                }}
                 data={data}
                 save="value"
             />
