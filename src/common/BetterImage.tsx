@@ -13,9 +13,11 @@ type BetterImageProps = {
     style: StyleProp<ImageStyle>;
 };
 export default function BetterImage(props: BetterImageProps) {
-    const [source, setSource] = useState(require("../../assets/place.png"));
+    const [source, setSource] = useState("");
+    const [newImage, setNewImage] = useState(false);
 
     useEffect(() => {
+        // AsyncStorage.clear();
         const effect = async () => {
             if (
                 props.source &&
@@ -27,14 +29,18 @@ export default function BetterImage(props: BetterImageProps) {
                 let imgdata = await get(uri);
 
                 if (imgdata) {
-                    console.log(imgdata);
-                    setSource({ uri: imgdata });
+                    setSource(imgdata);
+                    setNewImage(true);
+                    console.log("cached")
                 } else {
+                    console.log("not cached")
                     const toDataURL = (url: string): Promise<string | null> =>
                         fetch(url)
                             .then((response) => {
-                                if (response.status == 200)
+                                if (response.status == 200) {
+                                    console.log("blob")
                                     return response.blob();
+                                }
                                 else return null;
                             })
                             .then(
@@ -52,24 +58,24 @@ export default function BetterImage(props: BetterImageProps) {
                             );
 
                     toDataURL(uri).then((dataurl) => {
+                        console.log(uri)
+                        console.log(dataurl)
                         if (
                             !dataurl ||
-                            dataurl.length < 50 ||
                             dataurl.startsWith("data:text/html")
                         )
                             return;
-                        console.log(dataurl.substring(0, 20));
+                        console.log("uri 2")
                         set(uri, dataurl);
-                        setSource({ uri: dataurl });
+                        setSource(dataurl);
+                        setNewImage(true);
                     });
                 }
-            } else if (props.source) {
-                setSource(props.source);
             }
         };
 
         effect();
     }, []);
 
-    return <Image source={source} style={props.style} />;
+    return <Image source={source ? {uri: source} : require("../../assets/place.png")} style={props.style} />;
 }

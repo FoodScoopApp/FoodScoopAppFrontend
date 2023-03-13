@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
 import { FlatList, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Meal, Subcategory } from '../dataconnection/FoodScoopAppTypes/models';
-import { getImageSource, TagsView } from '../dining-hall-list-view/MealItemView';
+import { TagsView } from '../dining-hall-list-view/MealItemView';
 import { getMealAgg } from '../dataconnection/serverMethods';
 import { Ionicons } from '@expo/vector-icons';
 import BetterImage from '../common/BetterImage';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../navigation/AppNavigator';
+import { getImageID } from '../dataconnection/FoodScoopAppTypes/converters';
 
 const styles = StyleSheet.create({
 	cell: {
@@ -38,7 +41,8 @@ const styles = StyleSheet.create({
 	},
 })
 
-export default function DiningHallSubcategoryView({ route, navigation }: { route: any, navigation: any }) {
+type Props = NativeStackScreenProps<RootStackParamList, "DiningHallSubcategoryScreen">;
+export default function DiningHallSubcategoryView({ route, navigation }: Props) {
 	const [meals, setMeals] = useState<Meal[]>([])
 	const subcategory = route.params.subcategory as Subcategory
 	useEffect(() => {
@@ -50,7 +54,7 @@ export default function DiningHallSubcategoryView({ route, navigation }: { route
 			setMeals(newMeals)
 		}
 		fetchData().catch(console.error)
-	})
+	}, [])
 	return <>
 		<FlatList data={meals} renderItem={(meal) =>
 			<SubcategoryMealView meal={meal.item}/>
@@ -68,7 +72,7 @@ type SubcategoryMealProps = {
 export function SubcategoryMealView(props: SubcategoryMealProps) {
 	return <View style={styles.hstack}>
 		<BetterImage
-			source={getImageSource(props.meal)}
+			source={{ uri: getImageID(props.meal.id)}}
 			style={styles.listimage} />
 		<View style={styles.vstack}>
 			<Text>{props.meal.description}</Text>

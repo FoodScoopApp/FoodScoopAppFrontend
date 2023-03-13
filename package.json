@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "GENERATE_SOURCEMAP=false expo start",
+    "start": "expo start",
     "prepare": "ts-patch install"
   },
   "repository": {
@@ -23,6 +23,8 @@
   "homepage": "https://github.com/FoodScoopApp/FoodScoopAppFrontend#readme",
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.17.11",
+    "@react-native-community/checkbox": "^0.5.15",
+    "@react-native-community/slider": "^4.4.2",
     "@react-navigation/native": "^6.1.5",
     "@react-navigation/native-stack": "^6.9.11",
     "async-storage": "^0.1.0",
@@ -32,16 +34,19 @@
     "expo-device": "~5.0.0",
     "expo-linear-gradient": "^12.0.1",
     "expo-notifications": "~0.17.0",
+    "expo-checkbox": "~2.2.2",
     "expo-status-bar": "~1.4.2",
     "moment": "^2.29.4",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-native": "^0.71.3",
+    "react": "18.1.0",
+    "react-dom": "18.1.0",
+    "react-native": "0.70.5",
+    "react-native-datepicker": "^1.7.2",
     "react-native-dropdown-select-list": "^2.0.4",
     "react-native-ionicons": "^4.6.5",
     "react-native-progress": "^5.0.0",
     "react-native-safe-area-context": "4.4.1",
     "react-native-screens": "~3.18.0",
+    "react-native-svg": "13.4.0",
     "react-native-web": "^0.18.12",
     "typia": "^3.5.8"
   },

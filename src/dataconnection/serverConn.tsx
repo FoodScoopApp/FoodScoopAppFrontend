@@ -103,11 +103,14 @@ export const requestBuilder = async (
     }
 
     try {
-        const data = resp.data;
-        if (handleError && data.error)
-            throw errorCreator(data.error, data.message ? data.message : null);
+        const dataresp = resp.data;
+        if (handleError && dataresp.error)
+            throw errorCreator(dataresp.error, dataresp.message ? dataresp.message : null);
 
-        return data;
+        console.log(endpoint)
+        console.log(data)
+        console.log(dataresp)
+        return dataresp;
     } catch (err) {
         console.error(err);
     }
