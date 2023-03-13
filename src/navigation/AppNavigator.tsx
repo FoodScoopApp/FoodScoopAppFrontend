@@ -38,7 +38,7 @@ export default function AppNavigator() {
             key={2}
             name={"LoginScreen"}
             component={LoginScreen}
-            options={{ title: "Log In" }}
+            options={{ title: "Log In", gestureEnabled: false }}
         />,
         <Stack.Screen
             key={1}
@@ -98,7 +98,7 @@ export default function AppNavigator() {
     return stack.length > 0 ? (
         <NavigationContainer
             theme={{
-                dark: true,
+                dark: false,
                 colors: {
                     background: "white",
                     primary: accentColor,

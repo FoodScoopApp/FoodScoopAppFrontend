@@ -128,6 +128,8 @@ export const getMealAgg = async (
 export const getUser = async () => {
     const resp: UserResp = await requestBuilder("get", "user", {});
 
+    setJSON("favmeals", resp.user.favMeals);
+
     return resp.user;
 };
 
@@ -138,7 +140,25 @@ export const changeUserProp = async (val: ChangeUserPropReq) => {
         val
     );
 
+    if (val.favMeals) setJSON("favmeals", val.favMeals);
+
     return resp.success;
+};
+
+export const getActivityLevels = async () => {
+    const resp: ActivityLevelAggResp = await requestBuilder(
+        "get",
+        "activity",
+        {}
+    );
+    return resp;
+};
+
+export const getActivityLevel = async (diningHall: DiningHallName) => {
+    const resp: ActivityLevelResp = await requestBuilder("get", "activity", {
+        diningHall: diningHall,
+    });
+    return resp;
 };
 
 /* Helper functions */
@@ -195,20 +215,4 @@ export const getCurrentMealPeriodForDiningHall = (diningHall: DiningHall) => {
     }
 
     return null;
-};
-
-export const getActivityLevels = async () => {
-    const resp: ActivityLevelAggResp = await requestBuilder(
-        "get",
-        "activity",
-        {}
-    );
-    return resp;
-};
-
-export const getActivityLevel = async (diningHall: DiningHallName) => {
-    const resp: ActivityLevelResp = await requestBuilder("get", "activity", {
-        diningHall: diningHall,
-    });
-    return resp;
 };

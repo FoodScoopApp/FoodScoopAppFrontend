@@ -1,6 +1,5 @@
 import React, { useState, Component, useEffect } from "react";
 import {
-    Dimensions,
     StyleSheet,
     ScrollView,
     View,
@@ -10,11 +9,15 @@ import {
     Button,
 } from "react-native";
 import { set } from "../dataconnection/serverConn";
-import { changeUserProp, getUser } from "../dataconnection/serverMethods";
+import {
+    changeUserProp,
+    getMeal,
+    getUser,
+} from "../dataconnection/serverMethods";
 import {
     DietaryRestriction,
     DiningHallName,
-    MealPlan,
+    Meal,
     User,
 } from "../dataconnection/FoodScoopAppTypes/models";
 import { RootStackParamList } from "../navigation/AppNavigator";
@@ -27,27 +30,25 @@ import {
     convertErrorCode,
     mealPlans,
 } from "../dataconnection/FoodScoopAppTypes/converters";
-import { dietaryRestrictionsImages } from "../dining-hall-list-view/MealItemView";
+import {
+    dietaryRestrictionsImages,
+    ListItem,
+} from "../dining-hall-list-view/MealItemView";
 import { ChangeUserPropReq } from "../dataconnection/FoodScoopAppTypes/re";
 import Slider from "@react-native-community/slider";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ProfileScreen">;
 export default function ProfileScreen({ navigation }: Props) {
     let [user, setUser] = useState<User>();
-    const [mealPlan, setMealPlan] = useState("");
-
-    const data = [
-        { key: "1", value: "11" },
-        { key: "2", value: "14" },
-        { key: "3", value: "19" },
-    ];
+    let [meals, setMeals] = useState<Meal[]>([]);
 
     useEffect(() => {
         async function getData() {
-            let user = await getUser();
-            setUser(user);
+            const newuser = await getUser();
+            setUser(newuser);
             navigation.setOptions({
-                title: user.name,
+                title: newuser.name,
                 headerRight: () => (
                     <Button
                         title={"Sign Out"}
@@ -56,23 +57,22 @@ export default function ProfileScreen({ navigation }: Props) {
                     />
                 ),
             });
+            const favMeals = [];
+            for (let mealID of newuser.favMeals ?? []) {
+                try {
+                    const meal = await getMeal(mealID);
+                    favMeals.push(meal);
+                } catch {}
+            }
+            setMeals(favMeals);
         }
         getData();
     }, []);
 
-    function preferences() {
-        navigation.navigate("PreferencesScreen");
-    }
-
-    function restrictions() {
-        navigation.navigate("RestrictionsScreen");
-    }
-
     function signOut() {
         set("email", "");
         set("token", "");
-
-        navigation.navigate("LoginScreen");
+        navigation.replace("LoginScreen");
     }
 
     const setUserProp = async (props: ChangeUserPropReq) => {
@@ -160,7 +160,7 @@ export default function ProfileScreen({ navigation }: Props) {
             <View
                 style={[
                     nStyles.item,
-                    { marginTop: 30, flexDirection: "column" },
+                    { marginTop: 10, flexDirection: "column" },
                 ]}
             >
                 <Text
@@ -229,6 +229,21 @@ export default function ProfileScreen({ navigation }: Props) {
                     </View>
                 </TouchableOpacity>
             ))}
+
+            <Text style={nStyles.headerText}>Favorite Meals</Text>
+            {meals.map((meal) => (
+                <View key={meal.id} style={{ marginLeft: 10 }}>
+                    <ListItem meal={meal} />
+                </View>
+            ))}
+
+            <Button
+                color={accentColor}
+                title={"Reset Cache"}
+                onPress={() => {
+                    AsyncStorage.clear();
+                }}
+            />
 
             <View style={nStyles.end} />
             {/* <View style={styles.nameView}>
