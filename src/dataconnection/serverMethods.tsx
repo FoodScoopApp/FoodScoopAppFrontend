@@ -178,7 +178,7 @@ export const getFilledDiningHall = async (
 
 export const getCurrentMealPeriodForDiningHall = (diningHall: DiningHall) => {
     for (let mp of diningHall.mealPeriods) {
-        const now = moment();
+        const now = moment("18:00", "H:mm");
         const start = moment(mp.startTime, "H:mm");
         const end = moment(mp.endTime, "H:mm");
 

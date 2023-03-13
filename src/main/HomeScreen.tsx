@@ -30,6 +30,7 @@ import BetterImage from "../common/BetterImage";
 import { ActivityLevelAggResp } from "../dataconnection/FoodScoopAppTypes/re";
 import * as Progress from "react-native-progress";
 import moment from "moment";
+import CustomFastImage from "../common/CustomFastImage";
 
 type Props = NativeStackScreenProps<RootStackParamList, "HomeScreen">;
 export default function HomeScreen({ navigation }: Props) {
@@ -48,7 +49,8 @@ export default function HomeScreen({ navigation }: Props) {
                         />
                     </TouchableOpacity>
                     <TouchableOpacity
-                        onPress={() => navigation.navigate("ProfileScreen")}>
+                        onPress={() => navigation.navigate("ProfileScreen")}
+                    >
                         <Ionicons
                             name="person"
                             size={30}
@@ -97,7 +99,8 @@ export default function HomeScreen({ navigation }: Props) {
                         fontWeight: "bold",
                         marginLeft: 10,
                         marginTop: 10,
-                    }}>
+                    }}
+                >
                     Recommendations
                 </Text>
             </View>
@@ -149,7 +152,8 @@ export default function HomeScreen({ navigation }: Props) {
                                 flexDirection: "row",
                                 alignItems: "center",
                                 justifyContent: "space-between",
-                            }}>
+                            }}
+                        >
                             <TouchableOpacity
                                 style={{
                                     flexDirection: "row",
@@ -159,7 +163,8 @@ export default function HomeScreen({ navigation }: Props) {
                                     navigation.navigate("DiningHallListView", {
                                         diningHallName: dh.name,
                                     })
-                                }>
+                                }
+                            >
                                 <Text style={styles.restaurantName}>
                                     {convertDiningHall[dh.name]}
                                 </Text>
@@ -173,24 +178,8 @@ export default function HomeScreen({ navigation }: Props) {
                                     flexDirection: "row",
                                     alignItems: "center",
                                     marginHorizontal: 20,
-                                }}>
-                                {levels && levels[dh.name] ? (
-                                    <View
-                                        style={{
-                                            flexDirection: "row",
-                                            alignItems: "center",
-                                        }}>
-                                        <Progress.Bar
-                                            progress={levels[dh.name]! / 100}
-                                            width={128}
-                                            color="#DB4D5B"
-                                        />
-                                        <Text style={{ marginHorizontal: 4 }}>
-                                            {levels[dh.name]}%
-                                        </Text>
-                                    </View>
-                                ) : null}
-                            </View>
+                                }}
+                            ></View>
                         </View>
                     );
                     if (!mp)
@@ -221,8 +210,26 @@ export default function HomeScreen({ navigation }: Props) {
                     const end = moment(mp.endTime, "H:mm").format("h:mm a");
 
                     return (
-                        <Fragment key={i}>
+                        <View key={i} style={{ marginBottom: 30 }}>
                             {title}
+                            {levels && levels[dh.name] ? (
+                                <View
+                                    style={{
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    <Progress.Bar
+                                        progress={levels[dh.name]! / 100}
+                                        width={128}
+                                        color="#DB4D5B"
+                                        style={{ marginLeft: 20 }}
+                                    />
+                                    <Text style={{ marginHorizontal: 4 }}>
+                                        {levels[dh.name]}%
+                                    </Text>
+                                </View>
+                            ) : null}
                             <Text style={styles.mealperiod}>
                                 {convertMealPeriods[mp.name] +
                                     " (" +
@@ -236,7 +243,7 @@ export default function HomeScreen({ navigation }: Props) {
                                 horizontal={true}
                                 renderItem={({ item }) => <Item name={item} />}
                             />
-                        </Fragment>
+                        </View>
                     );
                 })}
             </View>
@@ -248,7 +255,13 @@ type ItemProps = { name: string[] };
 const Item = ({ name }: ItemProps) => (
     <View style={styles.item}>
         <TouchableOpacity>
-            <BetterImage source={{ uri: name[1] }} style={styles.image} />
+            <CustomFastImage
+                source={{
+                    uri: name[1],
+                }}
+                style={styles.image}
+                cacheKey={name[1]}
+            />
             <Text style={styles.name}>{name[0]}</Text>
         </TouchableOpacity>
     </View>

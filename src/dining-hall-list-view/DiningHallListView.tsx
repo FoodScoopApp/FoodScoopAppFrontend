@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FlatList, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
-import { DiningHall, DiningHallName, MealID, MealPeriod } from '../dataconnection/FoodScoopAppTypes/models';
+import { DiningHall, DiningHallName, Meal, MealID, MealPeriod } from '../dataconnection/FoodScoopAppTypes/models';
 import { IconItem, ListItem } from './MealItemView';
 import { Ionicons } from '@expo/vector-icons';
 import { getCurrentMealPeriodForDiningHall, getDiningHall, getFilledDiningHall } from '../dataconnection/serverMethods';
@@ -69,7 +69,7 @@ export default function DiningHallListView({ route, navigation }: Props) {
 				}}>
 					<Text style={styles.subcategoryName}>{ item.name }</Text>
 				</TouchableOpacity>
-				<Dishes listMode={useListView} meals={item.meals} />
+				<Dishes listMode={useListView} meals={item.mealsFilled ?? []} />
 			</View>
 		} />
 	</>
@@ -85,7 +85,7 @@ function Dishes(props: MealsViewProps) {
 
 type MealsViewProps = {
 	listMode: boolean,
-	meals: MealID[],
+	meals: Meal[],
 }
 
 function IconsView(props: MealsViewProps) {

@@ -6,6 +6,7 @@ import {
     StyleSheet,
     ImageSourcePropType,
     Image,
+    ImageURISource,
 } from "react-native";
 import BetterImage from "../common/BetterImage";
 import {
@@ -15,6 +16,8 @@ import {
 } from "../dataconnection/FoodScoopAppTypes/models";
 import { getMeal } from "../dataconnection/serverMethods";
 import { getImageID } from "../dataconnection/FoodScoopAppTypes/converters";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import CustomFastImage from "../common/CustomFastImage";
 
 const styles = StyleSheet.create({
     vstack: {
@@ -42,11 +45,10 @@ const styles = StyleSheet.create({
         borderRadius: 16,
     },
     tagimage: {
-        width: 24,
-        height: 24,
-        padding: 4,
-        margin: 4,
-        alignContent: "center",
+        width: 20,
+        height: 20,
+        margin: 2,
+        alignContent: "space-around",
     },
     restrictions: {
         alignContent: "flex-start",
@@ -54,27 +56,30 @@ const styles = StyleSheet.create({
 });
 
 type MealItemProps = {
-    meal: MealID;
+    meal: Meal;
 };
 
 export function IconItem(props: MealItemProps) {
     const [meal, setMeal] = useState<Meal | null>(null);
     const [image, setImage] = useState<ImageSourcePropType | null>(null);
     useEffect(() => {
-        const fetchData = async () => {
-            const newMeal = await getMeal(props.meal);
-            const newImage = getImageID(newMeal.id);
-            setMeal(newMeal);
-            setImage({ uri: newImage });
-        };
-        fetchData().catch(console.error);
+        const newMeal = props.meal;
+        const newImage = getImageID(newMeal.id);
+        setMeal(newMeal);
+        setImage({ uri: newImage });
     }, []);
     if (meal == null) {
         return <></>;
     }
     return (
         <View style={styles.vstack}>
-            <BetterImage source={image} style={styles.listimage} />
+            <CustomFastImage
+                source={{
+                    uri: image ? (image as ImageURISource).uri ?? "" : "",
+                }}
+                style={styles.listimage}
+                cacheKey={image ? (image as ImageURISource).uri ?? "" : ""}
+            />
             <Text style={{ fontWeight: "bold" }}>{meal.name}</Text>
         </View>
     );
@@ -84,26 +89,30 @@ export function ListItem(props: MealItemProps) {
     const [meal, setMeal] = useState<Meal | null>(null);
     const [image, setImage] = useState<ImageSourcePropType | null>(null);
     useEffect(() => {
-        const fetchData = async () => {
-            const newMeal = await getMeal(props.meal);
-            const newImage = getImageID(newMeal.id);
-            setMeal(newMeal);
-            setImage({ uri: newImage });
-            console.log(newImage);
-        };
-        fetchData().catch(console.error);
+        const newMeal = props.meal;
+        const newImage = getImageID(newMeal.id);
+        setMeal(newMeal);
+        setImage({ uri: newImage });
     }, []);
     if (meal == null) {
         return <></>;
     }
     return (
         <View style={styles.hstack}>
-            <BetterImage source={image} style={styles.listimage} />
+            {/* <BetterImage source={image} style={styles.listimage} /> */}
+            <CustomFastImage
+                source={{
+                    uri: image ? (image as ImageURISource).uri ?? "" : "",
+                }}
+                style={styles.listimage}
+                cacheKey={image ? (image as ImageURISource).uri ?? "" : ""}
+            />
+
             <View style={styles.vstack}>
                 <Text style={{ fontWeight: "bold" }}>{meal.name}</Text>
                 <TagsView restrictions={meal.dietaryRestrictions} />
                 <Text>{meal.description}</Text>
-				{/* <Text>{meal.description}</Text> */}
+                {/* <Text>{meal.description}</Text> */}
             </View>
         </View>
     );
@@ -113,26 +122,36 @@ type RestrictionTagsProps = {
     restrictions: DietaryRestriction[];
 };
 
-export function getRestrictionIcons(
-    restrictions: DietaryRestriction[]
-): string[] {
-    return restrictions.map(
-        (item) =>
-            "https://menu.dining.ucla.edu/Content/Images/WebCodes/128px/" +
-            item +
-            ".png"
-    );
-}
+const imgRequire = {
+    V: require("../../assets/tags/V.png"),
+    VG: require("../../assets/tags/VG.png"),
+    ACSF: require("../../assets/tags/ACSF.png"),
+    AEGG: require("../../assets/tags/AEGG.png"),
+    AFSH: require("../../assets/tags/AFSH.png"),
+    AGTN: require("../../assets/tags/AGTN.png"),
+    AMLK: require("../../assets/tags/AMLK.png"),
+    APNT: require("../../assets/tags/APNT.png"),
+    ASES: require("../../assets/tags/ASES.png"),
+    ASOY: require("../../assets/tags/ASOY.png"),
+    ATNT: require("../../assets/tags/ATNT.png"),
+    AWHT: require("../../assets/tags/AWHT.png"),
+    HAL: require("../../assets/tags/HAL.png"),
+    HC: require("../../assets/tags/HC.png"),
+    LC: require("../../assets/tags/LC.png"),
+};
 
 export function TagsView(props: RestrictionTagsProps) {
     return (
         <FlatList
             style={styles.restrictions}
-            data={getRestrictionIcons(props.restrictions)}
+            data={props.restrictions}
             horizontal={true}
-            renderItem={({ item }) => (
-                <Image style={styles.tagimage} source={{ uri: item }} />
-            )}
+            scrollEnabled={false}
+            renderItem={({ item }) => {
+                return (
+                    <Image style={styles.tagimage} source={imgRequire[item]} />
+                );
+            }}
         />
     );
 }
