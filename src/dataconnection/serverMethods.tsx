@@ -23,6 +23,7 @@ import {
     ActivityLevelAggResp,
     ActivityLevelResp,
     ActivityLevelReq,
+    PushTokenUpdateReq,
 } from "./FoodScoopAppTypes/re";
 import { set, requestBuilder, getJSON, setJSON } from "./serverConn";
 import { dateFormat } from "./FoodScoopAppTypes/converters";
@@ -202,5 +203,10 @@ export const getActivityLevels = async () => {
 
 export const getActivityLevel = async (diningHall: DiningHallName) => {
     const resp: ActivityLevelResp = await requestBuilder("get", "activity", {diningHall: diningHall});
+    return resp
+};
+
+export const updatePushToken = async (req: PushTokenUpdateReq) => {
+    const resp = await requestBuilder("post", "pushToken", req)
     return resp
 };
