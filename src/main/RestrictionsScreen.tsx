@@ -3,37 +3,44 @@ import {
     ScrollView,
     View,
     Text,
-    StyleSheet, FlatList
+    StyleSheet
 } from 'react-native';
 import { MultipleSelectList } from 'react-native-dropdown-select-list';
-import Icon from 'react-native-ionicons';
 import {changeUserProp, getUser} from "../dataconnection/serverMethods";
-import {DiningHall, DiningHallName, User} from "../dataconnection/FoodScoopAppTypes/models";
-import {convertDiningHall, getKeyByValue} from "../dataconnection/FoodScoopAppTypes/converters";
-import {resolveAllWorkspacePackageJsonPaths} from "@expo/metro-config/build/getWatchFolders";
+import {DietaryRestriction, DiningHall, DiningHallName, User} from "../dataconnection/FoodScoopAppTypes/models";
+import {
+    convertDietaryRestrictions,
+    getKeyByValue
+} from "../dataconnection/FoodScoopAppTypes/converters";
 
-export default function PreferencesScreen({ navigation } : {navigation : any}) {
-    const [pullData, setPullData] = useState<DiningHallName[] | [string]>(["No dining halls set"]);
+export default function RestrictionsScreen({ navigation } : {navigation : any}) {
+    const [pullData, setPullData] = useState<DietaryRestriction[] | [string]>(["No dietary restrictions set"]);
     const [selected, setSelected] = useState([]);
     const [user, setUser] = useState<User | undefined>(undefined)
 
     const data = [
-        {key: '1', value: "Bruin Plate"},
-        {key: '2', value: "Epicuria at Covel"},
-        {key: '3', value: "De Neve"},
-        {key: '4', value: "Rendezvous West"},
-        {key: '5', value: "Rendezvous East"},
-        {key: '6', value: "Bruin Cafe"},
-        {key: '7', value: "Epicuria at Ackerman"},
-        {key: '8', value: "Study at Hedrick"},
-        {key: '9', value: "The Drey"}
+        {key: 1, value: "Vegetarian"},
+        {key: 2, value: "Vegan"},
+        {key: 3, value: "Contains Peanuts"},
+        {key: 4, value: "Contains Tree Nutes"},
+        {key: 5, value: "Contains Wheat"},
+        {key: 6, value: "Contains Gluten"},
+        {key: 7, value: "Contains Soy"},
+        {key: 8, value: "Contains Sesame"},
+        {key: 9, value: "Contains Dairy"},
+        {key: 10, value: "Contains Eggs"},
+        {key: 11, value: "Contains Crustacean Shellfish"},
+        {key: 12, value: "Contains Fish"},
+        {key: 13, value: "Halal"},
+        {key: 14, value: "Low Carbon"},
+        {key: 15, value: "High Carbon"},
     ]
 
     useEffect(() => {
         async function getData() {
             let user = await getUser();
             setUser(user);
-            setPullData((user ? user.favDiningHalls : ["No dining halls set"])!);
+            setPullData((user ? user.dietaryRestrictions : ["No dining halls set"])!);
         }
         getData()
     }, [])
@@ -43,28 +50,28 @@ export default function PreferencesScreen({ navigation } : {navigation : any}) {
             <MultipleSelectList
                 setSelected={async (val: any) => {
                     setSelected(val);
-                    let toDiningHalls: DiningHallName[] = []
+                    let toDietaryRestrictions: DietaryRestriction[] = []
                     selected.forEach((sel) => {
-                        let currentDH: DiningHallName = getKeyByValue(convertDiningHall, sel) as DiningHallName;
-                        toDiningHalls.push(currentDH);
+                        let currentDH: DietaryRestriction = getKeyByValue(convertDietaryRestrictions, sel) as DietaryRestriction;
+                        toDietaryRestrictions.push(currentDH);
                     })
-                    toDiningHalls = toDiningHalls.filter(function( element ) {
+                    toDietaryRestrictions = toDietaryRestrictions.filter(function( element ) {
                         return element !== undefined;
                     });
-                    await changeUserProp({favDiningHalls: toDiningHalls})
+                    await changeUserProp({dietaryRestrictions: toDietaryRestrictions})
                     let user = await getUser();
                     setUser(user);
-                    setPullData((user ? user.favDiningHalls : ["No dining halls set"])!);
+                    setPullData((user ? user.dietaryRestrictions : ["No dietary restrictions set"])!);
                 }}
                 data={data}
                 save="value"
             />
             <View>
-                <Text style={styles.dhHeader}>Favorite Dining Halls:</Text>
-                {pullData.map((dh) => {
+                <Text style={styles.dhHeader}>Dietary Restrictions:</Text>
+                {pullData.map((dr) => {
                     return (
                         <View>
-                            <Text style={styles.dhItem}>{convertDiningHall[dh as DiningHallName]}</Text>
+                            <Text style={styles.dhItem}>{convertDietaryRestrictions[dr as DietaryRestriction]}</Text>
                         </View>
                     );
                 })}
