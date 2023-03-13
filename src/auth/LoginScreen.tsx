@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
     Dimensions,
     Image,
@@ -6,19 +6,30 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    View, ScrollView, Button
+    View,
+    ScrollView,
+    Button,
+    KeyboardAvoidingView,
+    Platform,
+    TouchableWithoutFeedback,
+    Keyboard,
 } from "react-native";
-import { LinearGradient } from 'expo-linear-gradient';
+import { LinearGradient } from "expo-linear-gradient";
+import { signIn } from "../dataconnection/serverMethods";
+import { convertErrorCode } from "../dataconnection/FoodScoopAppTypes/converters";
 
-
-// @ts-ignore
-export default function LoginScreen({ navigation }) {
-    const [username, setUsername] = useState("");
+export default function LoginScreen({ navigation }: { navigation: any }) {
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    function login() {
+    async function login() {
         //Do login stuff here, then go to home page
-        navigation.navigate("HomeScreen");
+        try {
+            await signIn(email, password);
+            navigation.navigate("HomeScreen");
+        } catch (e: any) {
+            alert(convertErrorCode(e.code));
+        }
     }
 
     function signup() {
@@ -26,60 +37,75 @@ export default function LoginScreen({ navigation }) {
         navigation.navigate("SignupScreen");
     }
 
-    return(
-        <ScrollView>
-            <View style={styles.logoView}>
-                <Image
-                    source={require("../../assets/logo.png")}
-                    style={styles.image}/>
-                <Text style={styles.titleText}>FoodScoop</Text>
-            </View>
-            <View style={styles.inputView}>
-                <TextInput
-                    style={styles.input}
-                    placeholder={"username"}
-                    placeholderTextColor={"grey"}
-                    value={username}
-                    onChangeText={setUsername}/>
-                <TextInput
-                    style={styles.input}
-                    placeholder={"password"}
-                    placeholderTextColor={"grey"}
-                    value={password}
-                    onChangeText={setPassword}/>
-                <LinearGradient
-                    colors={["#DE6437", "#D93C78"]}
-                    style={styles.loginButton}>
-                    <TouchableOpacity onPress={() => login()}>
-                        <Text style={{fontSize: 16}}>Log In</Text>
-                    </TouchableOpacity>
-                </LinearGradient>
-                <Button
-                    title={"No account? Sign up!"}
-                    color={"#DC5058"}
-                    onPress={() => signup()}/>
-            </View>
-        </ScrollView>
-    )
+    return (
+        <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={{ flex: 1 }}>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <View style={styles.outer}>
+                    <View style={styles.logoView}>
+                        <Image
+                            source={require("../../assets/logo.png")}
+                            style={styles.image}
+                        />
+                        <Text style={styles.titleText}>FoodScoop</Text>
+                    </View>
+                    <View style={styles.inputView}>
+                        <TextInput
+                            style={styles.input}
+                            placeholder={"email"}
+                            placeholderTextColor={"grey"}
+                            value={email}
+                            onChangeText={setEmail}
+                        />
+                        <TextInput
+                            style={styles.input}
+                            placeholder={"password"}
+                            placeholderTextColor={"grey"}
+                            value={password}
+                            onChangeText={setPassword}
+                            secureTextEntry={true}
+                        />
+                        <LinearGradient
+                            colors={["#DE6437", "#D93C78"]}
+                            style={styles.loginButton}>
+                            <TouchableOpacity onPress={async () => login()}>
+                                <Text style={{ fontSize: 16 }}>Log In</Text>
+                            </TouchableOpacity>
+                        </LinearGradient>
+                        <Button
+                            title={"No account? Sign up!"}
+                            color={"#DC5058"}
+                            onPress={() => signup()}
+                        />
+                    </View>
+                </View>
+            </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
+    );
 }
 
 const styles = StyleSheet.create({
+    outer: {
+        flex: 1,
+        justifyContent: "center"
+    },
     image: {
         width: 80,
         height: 80,
-        borderRadius: 16
+        borderRadius: 16,
     },
     titleText: {
         fontFamily: "Avenir",
         fontSize: 40,
-        marginLeft: 20
+        marginLeft: 20,
     },
     logoView: {
         alignItems: "center",
         alignSelf: "center",
         flexDirection: "row",
-        width: Dimensions.get("screen").width - 50,
-        paddingTop: Dimensions.get("screen").height / 2 - 250
+        // width: Dimensions.get("screen").width - 50,
+        // paddingTop: Dimensions.get("screen").height / 2 - 250,
     },
     inputView: {
         paddingTop: 50,
@@ -98,5 +124,5 @@ const styles = StyleSheet.create({
         padding: 10,
         alignItems: "center",
         borderRadius: 10,
-    }
+    },
 });
