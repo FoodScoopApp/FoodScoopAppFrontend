@@ -65,9 +65,9 @@ export default function DiningHallListView({ route, navigation }: Props) {
 			<View
 				style={styles.cell}>
 				<TouchableOpacity onPress={async () => {
-					navigation.navigate("DiningHallSubcategoryScreen", { subcategory: item })
+					// navigation.navigate("DiningHallSubcategoryScreen", { subcategory: item })
 				}}>
-					<Text style={styles.subcategoryName}>{ item.name }</Text>
+					{item.name.length > 2 ? <Text style={styles.subcategoryName}>{ item.name }</Text> : null}
 				</TouchableOpacity>
 				<Dishes listMode={useListView} meals={item.mealsFilled ?? []} />
 			</View>

@@ -86,16 +86,13 @@ const CustomFastImage = (props: {
       )}.${imgXt[0]}8`;
       let imgXistsInCache = await findImageInCache(cacheFileUri);
       if (imgXistsInCache.exists) {
-        console.log("cached!" + Math.random());
         setUri(cacheFileUri);
         forceUpdate();
       } else {
         let cached = await cacheImage(uri, cacheFileUri, () => {});
         if (cached.cached) {
-          console.log("cached NEW!");
           setUri(cached.path ?? "");
         } else {
-          console.log("null");
           setUri("null");
         }
       }
