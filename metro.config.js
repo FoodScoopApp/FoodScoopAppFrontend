@@ -5,7 +5,6 @@ const { transform } = require("ttypescript");
 const config = getDefaultConfig(__dirname);
 
 config.transformer.transform = ({ src, filename, options }) => {
-  console.log("transforming")
   const { code } = transform(src, {
     filename,
     ...options,
@@ -14,5 +13,3 @@ config.transformer.transform = ({ src, filename, options }) => {
 }
 
 module.exports = config;
-
-console.log(module.exports)

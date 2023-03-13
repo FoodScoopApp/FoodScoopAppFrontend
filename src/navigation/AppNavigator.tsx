@@ -12,12 +12,12 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import DiningHallSubcategoryView from "../dining-hall-subcategory-view/DiningHallSubcategoryView";
 import { getUser } from "../dataconnection/serverMethods";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-<<<<<<< HEAD
-import { DiningHallName, Subcategory } from "../dataconnection/FoodScoopAppTypes/models";
-=======
+import {
+    DiningHallName,
+    Subcategory,
+} from "../dataconnection/FoodScoopAppTypes/models";
 import RestrictionsScreen from "../main/RestrictionsScreen";
->>>>>>> origin/dev_arya
+import { accentColor } from "../dataconnection/FoodScoopAppTypes/converters";
 
 export type RootStackParamList = {
     LoginScreen: undefined;
@@ -25,14 +25,9 @@ export type RootStackParamList = {
     HomeScreen: undefined;
     ProfileScreen: undefined;
     PreferencesScreen: undefined;
-<<<<<<< HEAD
     DiningHallSubcategoryScreen: { subcategory: Subcategory };
     DiningHallListView: { diningHallName: DiningHallName };
-=======
     RestrictionsScreen: undefined;
-    DiningHallSubcategoryScreen: undefined;
-    DiningHallListView: { diningHallName: string };
->>>>>>> origin/dev_arya
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -101,7 +96,19 @@ export default function AppNavigator() {
     }, []);
 
     return stack.length > 0 ? (
-        <NavigationContainer>
+        <NavigationContainer
+            theme={{
+                dark: true,
+                colors: {
+                    background: "white",
+                    primary: accentColor,
+                    border: "",
+                    card: "",
+                    notification: "",
+                    text: "black",
+                },
+            }}
+        >
             <Stack.Navigator>{stack}</Stack.Navigator>
         </NavigationContainer>
     ) : null;

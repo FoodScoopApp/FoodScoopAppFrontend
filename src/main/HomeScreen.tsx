@@ -17,6 +17,7 @@ import {
     DiningHallName,
 } from "../dataconnection/FoodScoopAppTypes/models";
 import {
+    accentColor,
     convertDiningHall,
     convertMealPeriods,
     getImageID,
@@ -45,7 +46,7 @@ export default function HomeScreen({ navigation }: Props) {
                         <Ionicons
                             name={"calendar"}
                             size={30}
-                            style={{ marginLeft: 5, marginRight: 5 }}
+                            style={{ marginLeft: 20, marginRight: 20 }}
                         />
                     </TouchableOpacity>
                     <TouchableOpacity
@@ -80,7 +81,6 @@ export default function HomeScreen({ navigation }: Props) {
                 const newLevels = await getActivityLevels();
                 setLevels(newLevels);
             } catch (err) {
-                console.log("activity");
                 console.error(err);
             }
         };
@@ -222,7 +222,7 @@ export default function HomeScreen({ navigation }: Props) {
                                     <Progress.Bar
                                         progress={levels[dh.name]! / 100}
                                         width={128}
-                                        color="#DB4D5B"
+                                        color={accentColor}
                                         style={{ marginLeft: 20 }}
                                     />
                                     <Text style={{ marginHorizontal: 4 }}>

@@ -8,15 +8,28 @@ import {
     Image,
     TouchableOpacity,
     Button,
-    FlatList,
 } from "react-native";
-import { SelectList } from "react-native-dropdown-select-list";
 import { set } from "../dataconnection/serverConn";
 import { changeUserProp, getUser } from "../dataconnection/serverMethods";
-import { MealPlan, User } from "../dataconnection/FoodScoopAppTypes/models";
+import {
+    DietaryRestriction,
+    DiningHallName,
+    MealPlan,
+    User,
+} from "../dataconnection/FoodScoopAppTypes/models";
 import { RootStackParamList } from "../navigation/AppNavigator";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { CheckBox } from "@re"
+import Checkbox from "expo-checkbox";
+import {
+    accentColor,
+    convertDietaryRestrictions,
+    convertDiningHall,
+    convertErrorCode,
+    mealPlans,
+} from "../dataconnection/FoodScoopAppTypes/converters";
+import { dietaryRestrictionsImages } from "../dining-hall-list-view/MealItemView";
+import { ChangeUserPropReq } from "../dataconnection/FoodScoopAppTypes/re";
+import Slider from "@react-native-community/slider";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ProfileScreen">;
 export default function ProfileScreen({ navigation }: Props) {
@@ -36,7 +49,11 @@ export default function ProfileScreen({ navigation }: Props) {
             navigation.setOptions({
                 title: user.name,
                 headerRight: () => (
-                    <Button title={"Sign Out"} onPress={() => signOut()} />
+                    <Button
+                        title={"Sign Out"}
+                        onPress={() => signOut()}
+                        color={accentColor}
+                    />
                 ),
             });
         }
@@ -58,13 +75,162 @@ export default function ProfileScreen({ navigation }: Props) {
         navigation.navigate("LoginScreen");
     }
 
+    const setUserProp = async (props: ChangeUserPropReq) => {
+        if (!user) return;
+        const initUser = { ...user };
+        const changeUser = { ...user };
+        try {
+            Object.keys(props).forEach(function (key) {
+                (changeUser as any)[key] =
+                    (props as any)[key] ?? (changeUser as any)[key];
+            });
+            setUser(changeUser);
+            await changeUserProp(props);
+        } catch (e: any) {
+            alert(convertErrorCode(e.code));
+            setUser(initUser);
+        }
+    };
+
+    const setUserPropArray = async (prop: string, val: any) => {
+        const arr: any[] = (user as any)[prop];
+
+        const idx = arr.indexOf(val);
+        if (idx > -1) {
+            arr.splice(idx, 1);
+        } else {
+            arr.push(val);
+        }
+        const obj: ChangeUserPropReq = {};
+        (obj as any)[prop] = arr;
+        setUserProp(obj);
+    };
+
     return (
-        <ScrollView style={nStyles.scrollView}>
+        <ScrollView>
             <Text style={nStyles.headerText}>Meal Plan</Text>
-            {["11", "14", "19"].map((it, i) => <View key={i}>
-                <Text>{it}</Text>
-                <CheckBox></CheckBox>
-            </View>)}
+            {mealPlans.map((it, i) => (
+                <TouchableOpacity
+                    key={i}
+                    onPress={() => setUserProp({ mealPlan: it })}
+                >
+                    <View style={nStyles.item}>
+                        <Text style={nStyles.itemText}>{it}</Text>
+                        <Checkbox
+                            color={accentColor}
+                            style={nStyles.itemCheckbox}
+                            value={user?.mealPlan === it}
+                        ></Checkbox>
+                    </View>
+                </TouchableOpacity>
+            ))}
+
+            <Text style={nStyles.headerText}>Dietary Restrictions</Text>
+            {Object.entries(convertDietaryRestrictions).map((it, i) => (
+                <TouchableOpacity
+                    key={i}
+                    onPress={() => {
+                        setUserPropArray("dietaryRestrictions", it[0]);
+                    }}
+                >
+                    <View style={nStyles.item}>
+                        <Image
+                            source={
+                                dietaryRestrictionsImages[
+                                    it[0] as DietaryRestriction
+                                ]
+                            }
+                            style={nStyles.itemImage}
+                        />
+                        <Text style={nStyles.itemText}>
+                            {it[1].replace("Contains", "No")}
+                        </Text>
+                        <Checkbox
+                            color={accentColor}
+                            style={nStyles.itemCheckbox}
+                            value={
+                                (user?.dietaryRestrictions?.indexOf(
+                                    it[0] as DietaryRestriction
+                                ) ?? -1) > -1
+                            }
+                        ></Checkbox>
+                    </View>
+                </TouchableOpacity>
+            ))}
+            <View
+                style={[
+                    nStyles.item,
+                    { marginTop: 30, flexDirection: "column" },
+                ]}
+            >
+                <Text
+                    style={[
+                        nStyles.itemText,
+                        { fontWeight: "bold", marginBottom: 10 },
+                    ]}
+                >
+                    Preferred Caloric Intake (per day)
+                </Text>
+                <View
+                    style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                    }}
+                >
+                    <Slider
+                        style={{ flex: 1 }}
+                        minimumValue={0}
+                        maximumValue={3000}
+                        minimumTrackTintColor={accentColor}
+                        onValueChange={(val) =>
+                            setUserProp({
+                                caloricIntakePerDay: Math.round(val),
+                            })
+                        }
+                        step={100}
+                        value={user?.caloricIntakePerDay ?? 0}
+                    ></Slider>
+                    <Text
+                        style={{
+                            marginLeft: 10,
+                            width: 70,
+                            textAlign: "right",
+                        }}
+                    >
+                        {!user?.caloricIntakePerDay ||
+                        user?.caloricIntakePerDay === 0
+                            ? "0 (no limit)"
+                            : user?.caloricIntakePerDay}{" "}
+                        cals
+                    </Text>
+                </View>
+            </View>
+
+            <Text style={nStyles.headerText}>Favorite Dining Halls</Text>
+            {Object.entries(convertDiningHall).map((it, i) => (
+                <TouchableOpacity
+                    key={i}
+                    onPress={() => {
+                        setUserPropArray("favDiningHalls", it[0]);
+                    }}
+                >
+                    <View style={nStyles.item}>
+                        <Text style={nStyles.itemText}>{it[1]}</Text>
+                        <Checkbox
+                            color={accentColor}
+                            style={nStyles.itemCheckbox}
+                            value={
+                                (user?.favDiningHalls?.indexOf(
+                                    it[0] as DiningHallName
+                                ) ?? -1) > -1
+                            }
+                        ></Checkbox>
+                    </View>
+                </TouchableOpacity>
+            ))}
+
+            <View style={nStyles.end} />
             {/* <View style={styles.nameView}>
                 <Image
                     source={require("../../assets/logo.png")}
@@ -97,13 +263,39 @@ export default function ProfileScreen({ navigation }: Props) {
 }
 
 const nStyles = StyleSheet.create({
-    scrollView: {
-        paddingTop: 20,
-    },
     headerText: {
         fontSize: 25,
         fontWeight: "bold",
-        marginLeft: 20
+        marginLeft: 20,
+        marginBottom: 10,
+        marginTop: 40,
+    },
+    item: {
+        flexDirection: "row",
+        paddingLeft: 20,
+        paddingTop: 10,
+        paddingBottom: 10,
+        paddingRight: 20,
+        backgroundColor: "white",
+        borderBottomColor: "lightgray",
+        borderBottomWidth: 1,
+        justifyContent: "space-between",
+    },
+    itemText: {
+        fontSize: 17,
+        alignSelf: "flex-start",
+        flex: 1,
+    },
+    itemCheckbox: {
+        alignSelf: "flex-end",
+    },
+    itemImage: {
+        height: 17,
+        width: 17,
+        marginRight: 5,
+    },
+    end: {
+        margin: 50,
     },
 });
 

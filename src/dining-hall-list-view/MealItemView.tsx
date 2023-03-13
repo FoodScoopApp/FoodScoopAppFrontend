@@ -122,7 +122,9 @@ type RestrictionTagsProps = {
     restrictions: DietaryRestriction[];
 };
 
-const imgRequire = {
+export const dietaryRestrictionsImages: {
+    [Property in DietaryRestriction]: any;
+} = {
     V: require("../../assets/tags/V.png"),
     VG: require("../../assets/tags/VG.png"),
     ACSF: require("../../assets/tags/ACSF.png"),
@@ -149,7 +151,10 @@ export function TagsView(props: RestrictionTagsProps) {
             scrollEnabled={false}
             renderItem={({ item }) => {
                 return (
-                    <Image style={styles.tagimage} source={imgRequire[item]} />
+                    <Image
+                        style={styles.tagimage}
+                        source={dietaryRestrictionsImages[item]}
+                    />
                 );
             }}
         />

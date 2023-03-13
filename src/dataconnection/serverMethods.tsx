@@ -103,10 +103,8 @@ export const getMealAgg = async (
     const meals: Meal[] = [];
     if (!force) {
         needed = [];
-        console.log(mealIDs);
         for (let id of mealIDs) {
             const meal = await getJSON(id);
-            console.log(meal);
             if (!meal) needed.push(id);
             else meals.push(meal);
         }
@@ -178,7 +176,7 @@ export const getFilledDiningHall = async (
 
 export const getCurrentMealPeriodForDiningHall = (diningHall: DiningHall) => {
     for (let mp of diningHall.mealPeriods) {
-        const now = moment("18:00", "H:mm");
+        const now = moment();
         const start = moment(mp.startTime, "H:mm");
         const end = moment(mp.endTime, "H:mm");
 
