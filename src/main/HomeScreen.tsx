@@ -29,6 +29,7 @@ import {
 import BetterImage from "../common/BetterImage";
 import { ActivityLevelAggResp } from "../dataconnection/FoodScoopAppTypes/re";
 import * as Progress from "react-native-progress";
+import moment from "moment";
 
 type Props = NativeStackScreenProps<RootStackParamList, "HomeScreen">;
 export default function HomeScreen({ navigation }: Props) {
@@ -62,17 +63,24 @@ export default function HomeScreen({ navigation }: Props) {
         const getDHs = async () => {
             setDiningHalls([]);
             for (let dh of Object.keys(convertDiningHall)) {
-                const data = await getFilledDiningHall(
-                    dh as DiningHallName,
-                    new Date()
-                );
-                setDiningHalls((old) => [...old, data]);
+                try {
+                    const data = await getFilledDiningHall(
+                        dh as DiningHallName,
+                        new Date()
+                    );
+                    setDiningHalls((old) => [...old, data]);
+                } catch {}
             }
         };
 
         const getLevels = async () => {
-            const newLevels = await getActivityLevels();
-            setLevels(newLevels);
+            try {
+                const newLevels = await getActivityLevels();
+                setLevels(newLevels);
+            } catch (err) {
+                console.log("activity");
+                console.error(err);
+            }
         };
 
         getDHs();
@@ -153,11 +161,7 @@ export default function HomeScreen({ navigation }: Props) {
                                     })
                                 }>
                                 <Text style={styles.restaurantName}>
-                                    {convertDiningHall[dh.name] +
-                                        (mp
-                                            ? " - " +
-                                              convertMealPeriods[mp.name]
-                                            : "")}
+                                    {convertDiningHall[dh.name]}
                                 </Text>
                                 <Ionicons
                                     name={"chevron-forward-outline"}
@@ -170,11 +174,11 @@ export default function HomeScreen({ navigation }: Props) {
                                     alignItems: "center",
                                     marginHorizontal: 20,
                                 }}>
-                                { levels && levels[dh.name] ?
+                                {levels && levels[dh.name] ? (
                                     <View
                                         style={{
                                             flexDirection: "row",
-                                            alignItems: "center"
+                                            alignItems: "center",
                                         }}>
                                         <Progress.Bar
                                             progress={levels[dh.name]! / 100}
@@ -184,7 +188,8 @@ export default function HomeScreen({ navigation }: Props) {
                                         <Text style={{ marginHorizontal: 4 }}>
                                             {levels[dh.name]}%
                                         </Text>
-                                    </View> : null }
+                                    </View>
+                                ) : null}
                             </View>
                         </View>
                     );
@@ -205,15 +210,27 @@ export default function HomeScreen({ navigation }: Props) {
                         for (let m of sub.mealsFilled) {
                             // const m = sub.mealsFilled[0];
                             let name = m.name;
-                            if (name.length > 50) {
-                                name = name.substring(0, 50) + "...";
+                            if (name.length > 30) {
+                                name = name.substring(0, 30) + "...";
                             }
                             items.push([name, getImageID(m.id)]);
                         }
                     }
+
+                    const start = moment(mp.startTime, "H:mm").format("h:mm a");
+                    const end = moment(mp.endTime, "H:mm").format("h:mm a");
+
                     return (
                         <Fragment key={i}>
                             {title}
+                            <Text style={styles.mealperiod}>
+                                {convertMealPeriods[mp.name] +
+                                    " (" +
+                                    start +
+                                    " - " +
+                                    end +
+                                    ")"}
+                            </Text>
                             <FlatList
                                 data={items}
                                 horizontal={true}
@@ -248,6 +265,9 @@ const styles = StyleSheet.create({
     },
     nomeal: {
         padding: 20,
+    },
+    mealperiod: {
+        paddingLeft: 20,
     },
     name: {
         fontSize: 15,

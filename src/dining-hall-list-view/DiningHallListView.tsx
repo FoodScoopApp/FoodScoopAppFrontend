@@ -3,12 +3,14 @@ import { FlatList, Text, View, StyleSheet, TouchableOpacity } from 'react-native
 import { DiningHall, DiningHallName, MealID, MealPeriod } from '../dataconnection/FoodScoopAppTypes/models';
 import { IconItem, ListItem } from './MealItemView';
 import { Ionicons } from '@expo/vector-icons';
-import { getDiningHall } from '../dataconnection/serverMethods';
+import { getCurrentMealPeriodForDiningHall, getDiningHall, getFilledDiningHall } from '../dataconnection/serverMethods';
 import { convertDiningHall } from '../dataconnection/FoodScoopAppTypes/converters';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../navigation/AppNavigator';
 
 const styles = StyleSheet.create({
 	cell: {
-
+		marginBottom: 40
 	},
 	iconimage: {
 		width: 120,
@@ -24,14 +26,10 @@ const styles = StyleSheet.create({
 		fontSize: 24,
 		fontWeight: 'bold',
 	},
-})
+});
 
-function getPeriod(hall: DiningHall): MealPeriod | null {
-	// TODO: implementation
-	return null
-}
-
-export default function DiningHallListView({ route, navigation }: { route: any, navigation: any }) {
+type Props = NativeStackScreenProps<RootStackParamList, "DiningHallListView">;
+export default function DiningHallListView({ route, navigation }: Props) {
 	const [useListView, setView] = useState(true)
 	const [diningHall, setDiningHall] = useState<DiningHall | null>(null)
 	const [period, setPeriod] = useState<MealPeriod | null>(null)
@@ -42,19 +40,20 @@ export default function DiningHallListView({ route, navigation }: { route: any, 
 			title: convertedName,
 			headerRight: () => (
 				// TODO: other views, star, home, filter
-				<TouchableOpacity onPress={() => useListView ? setView(false) : setView(true)}>
-					<Ionicons name={useListView ? "list" : "grid"} size={30} color="black" style={{ marginRight: 5 }} />
-				</TouchableOpacity>
+				// <TouchableOpacity onPress={() => useListView ? setView(false) : setView(true)}>
+				// 	<Ionicons name={useListView ? "list" : "grid"} size={30} color="black" style={{ marginRight: 5 }} />
+				// </TouchableOpacity>
+				null
 			),
 		});
 		const fetchDiningHall = async () => {
-			const diningHall = await getDiningHall(diningHallName, new Date())
-			const currentPeriod = getPeriod(diningHall)
+			const diningHall = await getFilledDiningHall(diningHallName, new Date())
+			const currentPeriod = getCurrentMealPeriodForDiningHall(diningHall);
 			setDiningHall(diningHall)
 			setPeriod(currentPeriod)
 		}
 		fetchDiningHall().catch(console.error)
-	})
+	}, [])
 	if (diningHall == null) {
 		return <></>
 	}
@@ -62,13 +61,13 @@ export default function DiningHallListView({ route, navigation }: { route: any, 
 		return <></>
 	}
 	return <>
-		<FlatList data={period.subcategories} renderItem={({ item }) =>
+		<FlatList data={period.subcategories} style={{padding: 20}} renderItem={({ item } ) =>
 			<View
 				style={styles.cell}>
 				<TouchableOpacity onPress={async () => {
 					navigation.navigate("DiningHallSubcategoryScreen", { subcategory: item })
 				}}>
-					<Text style={styles.subcategoryName}>Subcategory</Text>
+					<Text style={styles.subcategoryName}>{ item.name }</Text>
 				</TouchableOpacity>
 				<Dishes listMode={useListView} meals={item.meals} />
 			</View>
