@@ -183,11 +183,17 @@ export default function ProfileScreen({ navigation }: Props) {
                         minimumValue={0}
                         maximumValue={3000}
                         minimumTrackTintColor={accentColor}
-                        onValueChange={(val) =>
+                        onValueChange={(val) => {
+                            if (!user) return;
+                            const newUser = { ...user };
+                            newUser.caloricIntakePerDay = val;
+                            setUser(newUser);
+                        }}
+                        onSlidingComplete={(val) => {
                             setUserProp({
                                 caloricIntakePerDay: Math.round(val),
-                            })
-                        }
+                            });
+                        }}
                         step={100}
                         value={user?.caloricIntakePerDay ?? 0}
                     ></Slider>
@@ -242,6 +248,7 @@ export default function ProfileScreen({ navigation }: Props) {
                 title={"Reset Cache"}
                 onPress={() => {
                     AsyncStorage.clear();
+                    signOut();
                 }}
             />
 
