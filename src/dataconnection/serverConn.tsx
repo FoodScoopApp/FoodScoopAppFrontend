@@ -106,10 +106,6 @@ export const requestBuilder = async (
         const dataresp = resp.data;
         if (handleError && dataresp.error)
             throw errorCreator(dataresp.error, dataresp.message ? dataresp.message : null);
-
-        console.log(endpoint)
-        console.log(data)
-        console.log(dataresp)
         return dataresp;
     } catch (err) {
         console.error(err);

@@ -31,14 +31,11 @@ export default function BetterImage(props: BetterImageProps) {
                 if (imgdata) {
                     setSource(imgdata);
                     setNewImage(true);
-                    console.log("cached")
                 } else {
-                    console.log("not cached")
                     const toDataURL = (url: string): Promise<string | null> =>
                         fetch(url)
                             .then((response) => {
                                 if (response.status == 200) {
-                                    console.log("blob")
                                     return response.blob();
                                 }
                                 else return null;
@@ -58,14 +55,11 @@ export default function BetterImage(props: BetterImageProps) {
                             );
 
                     toDataURL(uri).then((dataurl) => {
-                        console.log(uri)
-                        console.log(dataurl)
                         if (
                             !dataurl ||
                             dataurl.startsWith("data:text/html")
                         )
                             return;
-                        console.log("uri 2")
                         set(uri, dataurl);
                         setSource(dataurl);
                         setNewImage(true);
