@@ -7,6 +7,7 @@ import {
     TouchableOpacity,
     View,
     StyleSheet,
+    Platform,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -26,12 +27,15 @@ import {
     getCurrentMealPeriodForDiningHall,
     getFilledDiningHall,
     getActivityLevels,
+    updatePushToken,
 } from "../dataconnection/serverMethods";
 import BetterImage from "../common/BetterImage";
 import { ActivityLevelAggResp } from "../dataconnection/FoodScoopAppTypes/re";
 import * as Progress from "react-native-progress";
 import moment from "moment";
 import CustomFastImage from "../common/CustomFastImage";
+import * as Device from "expo-device";
+import * as Notifications from "expo-notifications";
 
 type Props = NativeStackScreenProps<RootStackParamList, "HomeScreen">;
 export default function HomeScreen({ navigation }: Props) {
@@ -85,8 +89,26 @@ export default function HomeScreen({ navigation }: Props) {
             }
         };
 
-        getDHs();
+        const updateToken = async () => {
+            if (Device.isDevice) {
+                const { status: existingStatus } =
+                    await Notifications.getPermissionsAsync();
+                await Notifications.requestPermissionsAsync();
+                const token = (await Notifications.getExpoPushTokenAsync())
+                    .data;
+                console.log(`token is ${token}`);
+                alert(token);
+                if (existingStatus !== "granted") {
+                    await updatePushToken({
+                        token: token,
+                        device: Platform.OS === "ios" ? "iOS" : "Android",
+                    });
+                }
+            }
+        };
+        updateToken();
 
+        getDHs();
         getLevels();
         setInterval(getLevels, 1000 * 60);
     }, []);
