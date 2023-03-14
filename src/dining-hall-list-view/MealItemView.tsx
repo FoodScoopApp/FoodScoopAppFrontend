@@ -7,17 +7,18 @@ import {
     ImageSourcePropType,
     Image,
     ImageURISource,
+    TouchableOpacity,
 } from "react-native";
-import BetterImage from "../common/BetterImage";
 import {
     DietaryRestriction,
     Meal,
     MealID,
 } from "../dataconnection/FoodScoopAppTypes/models";
-import { getMeal } from "../dataconnection/serverMethods";
-import { getImageID } from "../dataconnection/FoodScoopAppTypes/converters";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { accentColor, getImageID } from "../dataconnection/FoodScoopAppTypes/converters";
 import CustomFastImage from "../common/CustomFastImage";
+import { Ionicons } from "@expo/vector-icons";
+import { getJSON } from "../dataconnection/serverConn";
+import { changeUserProp } from "../dataconnection/serverMethods";
 
 const styles = StyleSheet.create({
     vstack: {
@@ -26,13 +27,13 @@ const styles = StyleSheet.create({
         padding: 8,
         gap: 8,
         flexWrap: "wrap",
-        width: "80%",
+        width: "100%",
     },
     hstack: {
         flexDirection: "row",
         alignItems: "center",
         padding: 8,
-        width: "100%",
+        width: "70%",
     },
     iconimage: {
         width: 120,
@@ -88,12 +89,21 @@ export function IconItem(props: MealItemProps) {
 export function ListItem(props: MealItemProps) {
     const [meal, setMeal] = useState<Meal | null>(null);
     const [image, setImage] = useState<ImageSourcePropType | null>(null);
+    const [isFavorite, setIsFavorite] = useState(false);
+
+    const initFavorite = async () => {
+        const favmeals: string[] = await getJSON("favmeals");
+        setIsFavorite(favmeals.includes(props.meal.id));
+    }
+
     useEffect(() => {
         const newMeal = props.meal;
         const newImage = getImageID(newMeal.id);
         setMeal(newMeal);
         setImage({ uri: newImage });
+        initFavorite();
     }, []);
+
     if (meal == null) {
         return <></>;
     }
@@ -114,6 +124,32 @@ export function ListItem(props: MealItemProps) {
                 <Text>{meal.description}</Text>
                 {/* <Text>{meal.description}</Text> */}
             </View>
+            <TouchableOpacity
+                onPress={async () => {
+                    const isNewFav = !isFavorite;
+                    setIsFavorite(isNewFav);
+                    const favMeals: string[] = await getJSON("favmeals");
+                    const idx = favMeals.indexOf(meal?.id ?? "");
+                    if (idx > -1) {
+                        if (!isNewFav) {
+                            favMeals.splice(idx, 1);
+                            changeUserProp({ favMeals });
+                        }
+                    } else {
+                        if (isNewFav) {
+                            favMeals.push(meal.id);
+                            changeUserProp({ favMeals });
+                        }
+                    }
+                }}
+            >
+                <Ionicons
+                    key={isFavorite ? 1 : 0}
+                    name={isFavorite ? "star" : "star-outline"}
+                    size={30}
+                    color={accentColor}
+                />
+            </TouchableOpacity>
         </View>
     );
 }
