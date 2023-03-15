@@ -18,7 +18,9 @@ export default function modalScreen() {
    const [complianceModal, setComplianceModal] = useState(true);
     return (
         <View style={styles.mainContainer}>
-            <Text style={styles.googleText}>Filters</Text>
+            <Text style={styles.googleText}>
+                Filters
+                </Text>
 
             
             <View>

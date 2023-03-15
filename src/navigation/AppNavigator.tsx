@@ -34,6 +34,10 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function AppNavigator() {
     const initStack = [
         <Stack.Screen
+            name={"ItemView"}
+            component={itemView}
+            options={{ title: "Item Screen" }} />,
+        <Stack.Screen
             key={2}
             name={"LoginScreen"}
             component={LoginScreen}
@@ -74,10 +78,6 @@ export default function AppNavigator() {
             component={DiningHallListView}
         />,
         <Stack.Screen
-            name={"ItemView"}
-            component={itemView}
-            options={{ title: "Item Screen" }} />,
-        <Stack.Screen
             name={"ModalView"}
             component={modalView}
             options={{ title: "Filter Screen" }} />
@@ -88,7 +88,7 @@ export default function AppNavigator() {
     useEffect(() => {
         getUser()
             .then((_) => {
-                [initStack[0], initStack[2]] = [initStack[2], initStack[0]];
+                // [initStack[0], initStack[2]] = [initStack[2], initStack[0]];
                 setStack(initStack);
             })
             .catch(() => {
