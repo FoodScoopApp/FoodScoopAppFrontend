@@ -6,17 +6,14 @@ import HomeScreen from "../main/HomeScreen";
 import DiningHallListView from "../dining-hall-list-view/DiningHallListView";
 
 import ProfileScreen from "../main/ProfileScreen";
-import PreferencesScreen from "../main/PreferencesScreen";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import DiningHallSubcategoryView from "../dining-hall-subcategory-view/DiningHallSubcategoryView";
 import { getUser } from "../dataconnection/serverMethods";
 import {
-    DiningHallName, MealID,
-    Subcategory,
+    DiningHallName, MealID
 } from "../dataconnection/FoodScoopAppTypes/models";
-import RestrictionsScreen from "../main/RestrictionsScreen";
 import { accentColor } from "../dataconnection/FoodScoopAppTypes/converters";
 import { StatusBar } from "expo-status-bar";
 import ItemView from "../itemScreen/ItemView";
@@ -26,13 +23,16 @@ export type RootStackParamList = {
     SignupScreen: undefined;
     HomeScreen: undefined;
     ProfileScreen: undefined;
-    PreferencesScreen: undefined;
-    DiningHallSubcategoryScreen: { subcategory: Subcategory };
     DiningHallListView: { diningHallName: DiningHallName };
     ModalView: undefined,
     ItemView: { mealID: MealID },
-    RestrictionsScreen: undefined;
 };
+
+declare global {
+    namespace ReactNavigation {
+      interface RootParamList extends RootStackParamList {}
+    }
+  }
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -63,28 +63,12 @@ export default function AppNavigator() {
             options={{ title: "Profile" }}
         />,
         <Stack.Screen
-            key={4}
-            name={"PreferencesScreen"}
-            component={PreferencesScreen}
-            options={{ title: "Preferences" }}
-        />,
-        <Stack.Screen
-            key={4}
-            name={"RestrictionsScreen"}
-            component={RestrictionsScreen}
-            options={{ title: "Dietary Restrictions" }}
-        />,
-        <Stack.Screen
-            key={5}
-            name={"DiningHallSubcategoryScreen"}
-            component={DiningHallSubcategoryView}
-        />,
-        <Stack.Screen
             key={6}
             name={"DiningHallListView"}
             component={DiningHallListView}
         />,
         <Stack.Screen
+            key={7}
             name={"ItemView"}
             component={ItemView}
             options={{ title: "View Item" }}

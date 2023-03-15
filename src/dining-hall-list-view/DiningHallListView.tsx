@@ -17,7 +17,7 @@ import {
     MealPeriod,
     User,
 } from "../dataconnection/FoodScoopAppTypes/models";
-import { IconItem, ListItem } from "./MealItemView";
+import { ListItem } from "./MealItemView";
 import { Ionicons } from "@expo/vector-icons";
 import {
     getCurrentMealPeriodForDiningHall,
@@ -200,28 +200,13 @@ export default function DiningHallListView({ route, navigation }: Props) {
 }
 
 function Dishes(props: MealsViewProps) {
-    if (props.listMode) {
-        return ListView(props);
-    } else {
-        return IconsView(props);
-    }
+    return ListView(props);
 }
 
 type MealsViewProps = {
     listMode: boolean;
     meals: Meal[];
 };
-
-function IconsView(props: MealsViewProps) {
-    return (
-        <FlatList
-            data={props.meals}
-            horizontal={true}
-            renderItem={({ item }) => <IconItem meal={item} />}
-        />
-    );
-}
-
 function ListView(props: MealsViewProps) {
     return (
         <FlatList

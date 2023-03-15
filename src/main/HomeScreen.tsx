@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, memo, useEffect, useState } from "react";
 import {
     FlatList,
     Image,
@@ -45,44 +45,57 @@ export default function HomeScreen({ navigation }: Props) {
     const [reqs, setReqs] = useState<ComprehensiveMealPlan>();
 
     type ItemProps = { name: string[] };
-    const Item = ({ name }: ItemProps) => (
-        <View style={styles.item}>
-            <TouchableOpacity onPress={() => navigation.navigate("ItemView", { mealID: name[2] })}>
-                <CustomFastImage
-                    source={{
-                        uri: name[1],
-                    }}
-                    style={styles.image}
-                    cacheKey={name[1]}
-                />
-                <Text style={styles.name}>{name[0]}</Text>
-            </TouchableOpacity>
-        </View>
-    );
+    const Item = ({ name }: ItemProps) => {
+        const Img = memo(() => (
+            <CustomFastImage
+                source={{
+                    uri: name[1],
+                }}
+                style={styles.image}
+                cacheKey={name[1]}
+            />
+        ));
+        return (
+            <View style={styles.item}>
+                <TouchableOpacity
+                    onPress={() =>
+                        navigation.navigate("ItemView", { mealID: name[2] })
+                    }
+                >
+                    <Img />
+                    <Text style={styles.name}>{name[0]}</Text>
+                </TouchableOpacity>
+            </View>
+        );
+    };
 
     useEffect(() => {
         navigation.setOptions({
+            headerLeft: () => (
+                <TouchableOpacity
+                    onPress={() =>
+                        alert(
+                            "Want to view historical data? Other meal periods? We'll keep you posted when those features are available."
+                        )
+                    }
+                >
+                    <Ionicons
+                        color={accentColor}
+                        name={"calendar"}
+                        size={30}
+                    />
+                </TouchableOpacity>
+            ),
             headerRight: () => (
-                <>
-                    <TouchableOpacity>
-                        <Ionicons
-                            color={accentColor}
-                            name={"calendar"}
-                            size={30}
-                            style={{ marginLeft: 20, marginRight: 20 }}
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate("ProfileScreen")}
-                    >
-                        <Ionicons
-                            color={accentColor}
-                            name="person"
-                            size={30}
-                            style={{ marginRight: 5 }}
-                        />
-                    </TouchableOpacity>
-                </>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate("ProfileScreen")}
+                >
+                    <Ionicons
+                        color={accentColor}
+                        name="person"
+                        size={30}
+                    />
+                </TouchableOpacity>
             ),
             headerBackVisible: false,
         });
@@ -140,32 +153,30 @@ export default function HomeScreen({ navigation }: Props) {
     }, []);
     return (
         <ScrollView>
-            <View style={styles.todayView}>
-                <Text
-                    style={{
-                        fontSize: 25,
-                        fontWeight: "bold",
-                        marginLeft: 10,
-                        marginTop: 10,
-                    }}
-                >
-                    Recommendations
-                </Text>
-            </View>
             <View style={styles.mealPeriodsView}>
                 {reqs?.meals.B ? (
                     <View style={styles.mealTimeView}>
                         <Text style={{ fontSize: 20, fontWeight: "bold" }}>
                             Breakfast
                         </Text>
-                        <TouchableOpacity style={styles.mealTimeView}>
+                        <TouchableOpacity
+                            style={styles.mealTimeView}
+                            onPress={() =>
+                                navigation.navigate("ItemView", {
+                                    mealID: reqs.meals.B.id,
+                                })
+                            }
+                        >
                             <CustomFastImage
                                 source={{ uri: getImageID(reqs.meals.B.id) }}
                                 style={styles.image}
                                 cacheKey={getImageID(reqs.meals.B.id)}
                             />
-                            <Text style={{ marginTop: 10, textAlign: "center" }}>
-                                { reqs.meals.B.name } at { convertDiningHall[reqs.meals.B.diningHall] }
+                            <Text
+                                style={{ marginTop: 10, textAlign: "center" }}
+                            >
+                                {reqs.meals.B.name} at{" "}
+                                {convertDiningHall[reqs.meals.B.diningHall]}
                             </Text>
                         </TouchableOpacity>
                     </View>
@@ -175,14 +186,24 @@ export default function HomeScreen({ navigation }: Props) {
                         <Text style={{ fontSize: 20, fontWeight: "bold" }}>
                             Lunch
                         </Text>
-                        <TouchableOpacity style={styles.mealTimeView}>
+                        <TouchableOpacity
+                            style={styles.mealTimeView}
+                            onPress={() =>
+                                navigation.navigate("ItemView", {
+                                    mealID: reqs.meals.L.id,
+                                })
+                            }
+                        >
                             <CustomFastImage
                                 source={{ uri: getImageID(reqs.meals.L.id) }}
                                 style={styles.image}
                                 cacheKey={getImageID(reqs.meals.L.id)}
                             />
-                            <Text style={{ marginTop: 10, textAlign: "center" }}>
-                                { reqs.meals.L.name } at { convertDiningHall[reqs.meals.L.diningHall] }
+                            <Text
+                                style={{ marginTop: 10, textAlign: "center" }}
+                            >
+                                {reqs.meals.L.name} at{" "}
+                                {convertDiningHall[reqs.meals.L.diningHall]}
                             </Text>
                         </TouchableOpacity>
                     </View>
@@ -192,14 +213,24 @@ export default function HomeScreen({ navigation }: Props) {
                         <Text style={{ fontSize: 20, fontWeight: "bold" }}>
                             Dinner
                         </Text>
-                        <TouchableOpacity style={styles.mealTimeView}>
+                        <TouchableOpacity
+                            style={styles.mealTimeView}
+                            onPress={() =>
+                                navigation.navigate("ItemView", {
+                                    mealID: reqs.meals.D.id,
+                                })
+                            }
+                        >
                             <CustomFastImage
                                 source={{ uri: getImageID(reqs.meals.D.id) }}
                                 style={styles.image}
                                 cacheKey={getImageID(reqs.meals.D.id)}
                             />
-                            <Text style={{ marginTop: 10, textAlign: "center" }}>
-                                { reqs.meals.D.name } at { convertDiningHall[reqs.meals.D.diningHall] }
+                            <Text
+                                style={{ marginTop: 10, textAlign: "center" }}
+                            >
+                                {reqs.meals.D.name} at{" "}
+                                {convertDiningHall[reqs.meals.D.diningHall]}
                             </Text>
                         </TouchableOpacity>
                     </View>
@@ -223,17 +254,28 @@ export default function HomeScreen({ navigation }: Props) {
                                     alignItems: "center",
                                 }}
                                 onPress={() =>
-                                    navigation.navigate("DiningHallListView", {
-                                        diningHallName: dh.name,
-                                    })
+                                    mp
+                                        ? navigation.navigate(
+                                              "DiningHallListView",
+                                              {
+                                                  diningHallName: dh.name,
+                                              }
+                                          )
+                                        : null
                                 }
                             >
-                                <Text style={styles.restaurantName}>
+                                <Text
+                                    style={[
+                                        styles.restaurantName,
+                                        { color: accentColor },
+                                    ]}
+                                >
                                     {convertDiningHall[dh.name]}
                                 </Text>
                                 <Ionicons
                                     name={"chevron-forward-outline"}
                                     size={20}
+                                    color={accentColor}
                                 />
                             </TouchableOpacity>
                             <View

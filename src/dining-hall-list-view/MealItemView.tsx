@@ -19,21 +19,23 @@ import CustomFastImage from "../common/CustomFastImage";
 import { Ionicons } from "@expo/vector-icons";
 import { getJSON } from "../dataconnection/serverConn";
 import { changeUserProp } from "../dataconnection/serverMethods";
+import { useNavigation } from "@react-navigation/native";
+import { ItemViewProps } from "../itemScreen/ItemView";
 
 const styles = StyleSheet.create({
     vstack: {
         flexDirection: "column",
         alignItems: "flex-start",
         padding: 8,
-        gap: 8,
+        // gap: 8,
         flexWrap: "wrap",
-        width: "100%",
+        // width: "100%",
+        justifyContent: "space-between"
     },
     hstack: {
         flexDirection: "row",
-        alignItems: "center",
+        justifyContent: "space-between",
         padding: 8,
-        width: "70%",
     },
     iconimage: {
         width: 120,
@@ -49,7 +51,7 @@ const styles = StyleSheet.create({
         width: 20,
         height: 20,
         margin: 2,
-        alignContent: "space-around",
+        // alignContent: "space-around",
     },
     restrictions: {
         alignContent: "flex-start",
@@ -58,39 +60,14 @@ const styles = StyleSheet.create({
 
 type MealItemProps = {
     meal: Meal;
-    press?: () => void;
 };
-
-export function IconItem(props: MealItemProps) {
-    const [meal, setMeal] = useState<Meal | null>(null);
-    const [image, setImage] = useState<ImageSourcePropType | null>(null);
-    useEffect(() => {
-        const newMeal = props.meal;
-        const newImage = getImageID(newMeal.id);
-        setMeal(newMeal);
-        setImage({ uri: newImage });
-    }, []);
-    if (meal == null) {
-        return <></>;
-    }
-    return (
-        <View style={styles.vstack}>
-            <CustomFastImage
-                source={{
-                    uri: image ? (image as ImageURISource).uri ?? "" : "",
-                }}
-                style={styles.listimage}
-                cacheKey={image ? (image as ImageURISource).uri ?? "" : ""}
-            />
-            <Text style={{ fontWeight: "bold" }}>{meal.name}</Text>
-        </View>
-    );
-}
 
 export function ListItem(props: MealItemProps) {
     const [meal, setMeal] = useState<Meal | null>(null);
     const [image, setImage] = useState<ImageSourcePropType | null>(null);
     const [isFavorite, setIsFavorite] = useState(false);
+
+    const navigation = useNavigation();
 
     const initFavorite = async () => {
         const favmeals: string[] = await getJSON("favmeals");
@@ -112,8 +89,8 @@ export function ListItem(props: MealItemProps) {
         <View style={styles.hstack}>
             {/* <BetterImage source={image} style={styles.listimage} /> */}
             <TouchableOpacity
-                style={{flexDirection: "row"}}
-                onPress={() => props.press ? props.press() : null}>
+                style={{flexDirection: "row", flex: 1, flexWrap: "wrap"}}
+                onPress={() => navigation.navigate("ItemView", { mealID: meal.id })}>
                 <CustomFastImage
                     source={{
                         uri: image ? (image as ImageURISource).uri ?? "" : "",
@@ -121,10 +98,10 @@ export function ListItem(props: MealItemProps) {
                     style={styles.listimage}
                     cacheKey={image ? (image as ImageURISource).uri ?? "" : ""}
                 />
-                <View style={styles.vstack}>
-                    <Text style={{ fontWeight: "bold" }}>{meal.name}</Text>
+                <View style={[styles.vstack, { flexWrap: "wrap", flex: 1 }]}>
+                    <Text style={{ fontWeight: "bold" , flexWrap: "wrap", flex: 1}}>{meal.name}</Text>
                     <TagsView restrictions={meal.dietaryRestrictions} />
-                    <Text>{meal.description}</Text>
+                    <Text style={{flexWrap: "wrap", flex: 1}}>{meal.description}</Text>
                     {/* <Text>{meal.description}</Text> */}
                 </View>
             </TouchableOpacity>
@@ -162,6 +139,7 @@ export function ListItem(props: MealItemProps) {
 
 type RestrictionTagsProps = {
     restrictions: DietaryRestriction[];
+    size?: number
 };
 
 export const dietaryRestrictionsImages: {
@@ -194,7 +172,7 @@ export function TagsView(props: RestrictionTagsProps) {
             renderItem={({ item }) => {
                 return (
                     <Image
-                        style={styles.tagimage}
+                        style={[styles.tagimage, (props.size ? {width: props.size, height: props.size} : null)]}
                         source={dietaryRestrictionsImages[item]}
                     />
                 );

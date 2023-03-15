@@ -19,3 +19,4 @@ package-lock.json
 .idea
 .vscode
 yarn.lock
+yarn-error.log

@@ -265,7 +265,7 @@ export default function ProfileScreen({ navigation }: Props) {
 
             <Text style={nStyles.headerText}>Favorite Meals</Text>
             {meals.map((meal) => (
-                <View key={meal.id} style={{ marginLeft: 10 }}>
+                <View key={meal.id} style={{ marginLeft: 20, marginRight: 20 }}>
                     <ListItem meal={meal} />
                 </View>
             ))}
