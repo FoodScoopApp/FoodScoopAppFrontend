@@ -97,7 +97,6 @@ export default function HomeScreen({ navigation }: Props) {
                 const token = (await Notifications.getExpoPushTokenAsync())
                     .data;
                 console.log(`token is ${token}`);
-                alert(token);
                 if (existingStatus !== "granted") {
                     await updatePushToken({
                         token: token,

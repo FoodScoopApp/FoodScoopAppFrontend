@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "FoodScoopAppFrontend",
+    "name": "FoodScoop",
     "slug": "FoodScoopAppFrontend",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -19,7 +19,8 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.eaideasllc.FoodScoop"
+      "bundleIdentifier": "com.eaideasllc.FoodScoop",
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {
