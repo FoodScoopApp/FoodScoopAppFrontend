@@ -13,13 +13,13 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import DiningHallSubcategoryView from "../dining-hall-subcategory-view/DiningHallSubcategoryView";
 import { getUser } from "../dataconnection/serverMethods";
 import {
-    DiningHallName,
+    DiningHallName, MealID,
     Subcategory,
 } from "../dataconnection/FoodScoopAppTypes/models";
 import RestrictionsScreen from "../main/RestrictionsScreen";
 import { accentColor } from "../dataconnection/FoodScoopAppTypes/converters";
-import { FilterView, FilterViewProps } from "../filter/FilterView";
 import { StatusBar } from "expo-status-bar";
+import ItemView from "../itemScreen/ItemView";
 
 export type RootStackParamList = {
     LoginScreen: undefined;
@@ -29,6 +29,8 @@ export type RootStackParamList = {
     PreferencesScreen: undefined;
     DiningHallSubcategoryScreen: { subcategory: Subcategory };
     DiningHallListView: { diningHallName: DiningHallName };
+    ModalView: undefined,
+    ItemView: { mealID: MealID },
     RestrictionsScreen: undefined;
 };
 
@@ -81,6 +83,11 @@ export default function AppNavigator() {
             key={6}
             name={"DiningHallListView"}
             component={DiningHallListView}
+        />,
+        <Stack.Screen
+            name={"ItemView"}
+            component={ItemView}
+            options={{ title: "View Item" }}
         />
     ];
 
