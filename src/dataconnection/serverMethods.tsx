@@ -22,7 +22,6 @@ import {
     ChangeUserPropResp,
     ActivityLevelAggResp,
     ActivityLevelResp,
-    ActivityLevelReq,
     PushTokenUpdateReq,
 } from "./FoodScoopAppTypes/re";
 import { set, requestBuilder, getJSON, setJSON } from "./serverConn";

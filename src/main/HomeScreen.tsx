@@ -14,6 +14,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import { RootStackParamList } from "../navigation/AppNavigator";
 import {
+    ComprehensiveMealPlan,
     DiningHall,
     DiningHallName,
 } from "../dataconnection/FoodScoopAppTypes/models";
@@ -28,8 +29,8 @@ import {
     getFilledDiningHall,
     getActivityLevels,
     updatePushToken,
+    getMealPlan,
 } from "../dataconnection/serverMethods";
-import BetterImage from "../common/BetterImage";
 import { ActivityLevelAggResp } from "../dataconnection/FoodScoopAppTypes/re";
 import * as Progress from "react-native-progress";
 import moment from "moment";
@@ -41,6 +42,7 @@ type Props = NativeStackScreenProps<RootStackParamList, "HomeScreen">;
 export default function HomeScreen({ navigation }: Props) {
     const [diningHalls, setDiningHalls] = useState([] as DiningHall[]);
     const [levels, setLevels] = useState<ActivityLevelAggResp | null>(null);
+    const [reqs, setReqs] = useState<ComprehensiveMealPlan>();
 
     useEffect(() => {
         navigation.setOptions({
@@ -91,6 +93,11 @@ export default function HomeScreen({ navigation }: Props) {
             }
         };
 
+        const getReqs = async () => {
+            const reqs = await getMealPlan();
+            setReqs(reqs);
+        };
+
         const updateToken = async () => {
             if (Device.isDevice) {
                 const { status: existingStatus } =
@@ -112,6 +119,8 @@ export default function HomeScreen({ navigation }: Props) {
         getDHs();
         getLevels();
         setInterval(getLevels, 1000 * 60);
+
+        getReqs();
     }, []);
     return (
         <ScrollView>
@@ -128,42 +137,57 @@ export default function HomeScreen({ navigation }: Props) {
                 </Text>
             </View>
             <View style={styles.mealPeriodsView}>
-                <View style={styles.mealTimeView}>
-                    <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                        Breakfast
-                    </Text>
-                    <TouchableOpacity style={styles.mealTimeView}>
-                        <Image
-                            source={require("../../assets/logo.png")}
-                            style={styles.image}
-                        />
-                        <Text>Breakfast Meal</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.mealTimeView}>
-                    <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                        Lunch
-                    </Text>
-                    <TouchableOpacity style={styles.mealTimeView}>
-                        <Image
-                            source={require("../../assets/logo.png")}
-                            style={styles.image}
-                        />
-                        <Text>Lunch Meal</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.mealTimeView}>
-                    <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                        Dinner
-                    </Text>
-                    <TouchableOpacity style={styles.mealTimeView}>
-                        <Image
-                            source={require("../../assets/logo.png")}
-                            style={styles.image}
-                        />
-                        <Text>Dinner Meal</Text>
-                    </TouchableOpacity>
-                </View>
+                {reqs?.meals.B ? (
+                    <View style={styles.mealTimeView}>
+                        <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                            Breakfast
+                        </Text>
+                        <TouchableOpacity style={styles.mealTimeView}>
+                            <CustomFastImage
+                                source={{ uri: getImageID(reqs.meals.B.id) }}
+                                style={styles.image}
+                                cacheKey={getImageID(reqs.meals.B.id)}
+                            />
+                            <Text style={{ marginTop: 10, textAlign: "center" }}>
+                                { reqs.meals.B.name } at { convertDiningHall[reqs.meals.B.diningHall] }
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                ) : null}
+                {reqs?.meals.L ? (
+                    <View style={styles.mealTimeView}>
+                        <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                            Lunch
+                        </Text>
+                        <TouchableOpacity style={styles.mealTimeView}>
+                            <CustomFastImage
+                                source={{ uri: getImageID(reqs.meals.L.id) }}
+                                style={styles.image}
+                                cacheKey={getImageID(reqs.meals.L.id)}
+                            />
+                            <Text style={{ marginTop: 10, textAlign: "center" }}>
+                                { reqs.meals.L.name } at { convertDiningHall[reqs.meals.L.diningHall] }
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                ) : null}
+                {reqs?.meals.D ? (
+                    <View style={styles.mealTimeView}>
+                        <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                            Dinner
+                        </Text>
+                        <TouchableOpacity style={styles.mealTimeView}>
+                            <CustomFastImage
+                                source={{ uri: getImageID(reqs.meals.D.id) }}
+                                style={styles.image}
+                                cacheKey={getImageID(reqs.meals.D.id)}
+                            />
+                            <Text style={{ marginTop: 10, textAlign: "center" }}>
+                                { reqs.meals.D.name } at { convertDiningHall[reqs.meals.D.diningHall] }
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                ) : null}
             </View>
             <View>
                 {diningHalls.map((dh, i) => {
