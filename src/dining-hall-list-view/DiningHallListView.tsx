@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FlatList, Text, View, StyleSheet, TouchableOpacity } from 'react-native';
-import { DiningHall, DiningHallName, MealID, MealPeriod } from '../dataconnection/FoodScoopAppTypes/models';
+import { DiningHall, DiningHallName, Meal, MealID, MealPeriod } from '../dataconnection/FoodScoopAppTypes/models';
 import { IconItem, ListItem } from './MealItemView';
 import { Ionicons } from '@expo/vector-icons';
 import { getCurrentMealPeriodForDiningHall, getDiningHall, getFilledDiningHall } from '../dataconnection/serverMethods';
@@ -65,11 +65,11 @@ export default function DiningHallListView({ route, navigation }: Props) {
 			<View
 				style={styles.cell}>
 				<TouchableOpacity onPress={async () => {
-					navigation.navigate("DiningHallSubcategoryScreen", { subcategory: item })
+					// navigation.navigate("DiningHallSubcategoryScreen", { subcategory: item })
 				}}>
-					<Text style={styles.subcategoryName}>{ item.name }</Text>
+					{item.name.length > 2 ? <Text style={styles.subcategoryName}>{ item.name }</Text> : null}
 				</TouchableOpacity>
-				<Dishes listMode={useListView} meals={item.meals} />
+				<Dishes listMode={useListView} meals={item.mealsFilled ?? []} />
 			</View>
 		} />
 	</>
@@ -85,7 +85,7 @@ function Dishes(props: MealsViewProps) {
 
 type MealsViewProps = {
 	listMode: boolean,
-	meals: MealID[],
+	meals: Meal[],
 }
 
 function IconsView(props: MealsViewProps) {

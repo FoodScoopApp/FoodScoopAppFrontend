@@ -85,7 +85,6 @@ export const requestBuilder = async (
             if (error.response.status > 0 && error.response.status < 400) {
                 throw errorCreator("InternalServer"); // if sending success, but bad data, definitely a server error
             } else if (error.response.status < 500) {
-                console.log("bad")
                 throw errorCreator("BadRequest");
             } else {
                 throw errorCreator("Internet");

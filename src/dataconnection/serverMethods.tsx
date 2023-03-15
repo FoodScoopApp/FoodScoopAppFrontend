@@ -23,6 +23,7 @@ import {
     ActivityLevelAggResp,
     ActivityLevelResp,
     ActivityLevelReq,
+    PushTokenUpdateReq,
 } from "./FoodScoopAppTypes/re";
 import { set, requestBuilder, getJSON, setJSON } from "./serverConn";
 import { dateFormat } from "./FoodScoopAppTypes/converters";
@@ -103,10 +104,8 @@ export const getMealAgg = async (
     const meals: Meal[] = [];
     if (!force) {
         needed = [];
-        console.log(mealIDs);
         for (let id of mealIDs) {
             const meal = await getJSON(id);
-            console.log(meal);
             if (!meal) needed.push(id);
             else meals.push(meal);
         }
@@ -130,6 +129,8 @@ export const getMealAgg = async (
 export const getUser = async () => {
     const resp: UserResp = await requestBuilder("get", "user", {});
 
+    setJSON("favmeals", resp.user.favMeals);
+
     return resp.user;
 };
 
@@ -140,7 +141,30 @@ export const changeUserProp = async (val: ChangeUserPropReq) => {
         val
     );
 
+    if (val.favMeals) setJSON("favmeals", val.favMeals);
+
     return resp.success;
+};
+
+export const getActivityLevels = async () => {
+    const resp: ActivityLevelAggResp = await requestBuilder(
+        "get",
+        "activity",
+        {}
+    );
+    return resp;
+};
+
+export const getActivityLevel = async (diningHall: DiningHallName) => {
+    const resp: ActivityLevelResp = await requestBuilder("get", "activity", {
+        diningHall: diningHall,
+    });
+    return resp;
+};
+
+export const updatePushToken = async (req: PushTokenUpdateReq) => {
+    const resp = await requestBuilder("post", "pushToken", req)
+    return resp
 };
 
 /* Helper functions */
@@ -199,18 +223,3 @@ export const getCurrentMealPeriodForDiningHall = (diningHall: DiningHall) => {
     return null;
 };
 
-export const getActivityLevels = async () => {
-    const resp: ActivityLevelAggResp = await requestBuilder(
-        "get",
-        "activity",
-        {}
-    );
-    return resp;
-};
-
-export const getActivityLevel = async (diningHall: DiningHallName) => {
-    const resp: ActivityLevelResp = await requestBuilder("get", "activity", {
-        diningHall: diningHall,
-    });
-    return resp;
-};

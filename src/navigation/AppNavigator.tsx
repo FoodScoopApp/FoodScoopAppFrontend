@@ -14,8 +14,12 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import DiningHallSubcategoryView from "../dining-hall-subcategory-view/DiningHallSubcategoryView";
 import { getUser } from "../dataconnection/serverMethods";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { DiningHallName, Subcategory } from "../dataconnection/FoodScoopAppTypes/models";
+import {
+    DiningHallName,
+    Subcategory,
+} from "../dataconnection/FoodScoopAppTypes/models";
+import RestrictionsScreen from "../main/RestrictionsScreen";
+import { accentColor } from "../dataconnection/FoodScoopAppTypes/converters";
 
 export type RootStackParamList = {
     LoginScreen: undefined;
@@ -27,6 +31,7 @@ export type RootStackParamList = {
     DiningHallListView: { diningHallName: DiningHallName };
     ModalView: undefined,
     ItemView: undefined
+    RestrictionsScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -41,7 +46,7 @@ export default function AppNavigator() {
             key={2}
             name={"LoginScreen"}
             component={LoginScreen}
-            options={{ title: "Log In" }}
+            options={{ title: "Log In", gestureEnabled: false }}
         />,
         <Stack.Screen
             key={1}
@@ -66,6 +71,12 @@ export default function AppNavigator() {
             name={"PreferencesScreen"}
             component={PreferencesScreen}
             options={{ title: "Preferences" }}
+        />,
+        <Stack.Screen
+            key={4}
+            name={"RestrictionsScreen"}
+            component={RestrictionsScreen}
+            options={{ title: "Dietary Restrictions" }}
         />,
         <Stack.Screen
             key={5}
@@ -97,7 +108,19 @@ export default function AppNavigator() {
     }, []);
 
     return stack.length > 0 ? (
-        <NavigationContainer>
+        <NavigationContainer
+            theme={{
+                dark: false,
+                colors: {
+                    background: "white",
+                    primary: accentColor,
+                    border: "",
+                    card: "",
+                    notification: "",
+                    text: "black",
+                },
+            }}
+        >
             <Stack.Navigator>{stack}</Stack.Navigator>
         </NavigationContainer>
     ) : null;

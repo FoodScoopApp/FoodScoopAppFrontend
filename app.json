@@ -18,7 +18,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.eaideasllc.FoodScoop"
     },
     "android": {
       "adaptiveIcon": {
@@ -28,6 +29,12 @@
     },
     "web": {
       "favicon": "./assets/logo.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "406603a2-299c-48d3-8191-2d7ec933b593"
+      }
+    },
+    "owner": "eado"
   }
 }
