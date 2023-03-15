@@ -8,7 +8,7 @@ import {
     TouchableOpacity,
     Button,
 } from "react-native";
-import { set } from "../dataconnection/serverConn";
+import { get, set } from "../dataconnection/serverConn";
 import {
     changeUserProp,
     getMeal,
@@ -42,6 +42,7 @@ type Props = NativeStackScreenProps<RootStackParamList, "ProfileScreen">;
 export default function ProfileScreen({ navigation }: Props) {
     let [user, setUser] = useState<User>();
     let [meals, setMeals] = useState<Meal[]>([]);
+    let [noauto, setNoauto] = useState(true);
 
     useEffect(() => {
         async function getData() {
@@ -65,6 +66,10 @@ export default function ProfileScreen({ navigation }: Props) {
                 } catch {}
             }
             setMeals(favMeals);
+
+            if (await get("noautomaticfilter")) {
+                setNoauto(false);
+            }
         }
         getData();
     }, []);
@@ -212,6 +217,28 @@ export default function ProfileScreen({ navigation }: Props) {
                     </Text>
                 </View>
             </View>
+            <TouchableOpacity
+                onPress={async () => {
+                    if (!noauto) {
+                        set("noautomaticfilter", "");
+                        setNoauto(true);
+                    } else {
+                        set("noautomaticfilter", "true");
+                        setNoauto(false);
+                    }
+                }}
+            >
+                <View style={nStyles.item}>
+                    <Text style={nStyles.itemText}>
+                        Automatically filter meals based on restrictions
+                    </Text>
+                    <Checkbox
+                        color={accentColor}
+                        style={nStyles.itemCheckbox}
+                        value={noauto}
+                    ></Checkbox>
+                </View>
+            </TouchableOpacity>
 
             <Text style={nStyles.headerText}>Favorite Dining Halls</Text>
             {Object.entries(convertDiningHall).map((it, i) => (

@@ -6,6 +6,7 @@ A React frontend for FoodScoop: A new dining experience
 ### Dependencies:
 - Node.js version ^19.x.x
 - npm version ^9.x.x
+- yarn version ^1.22.x
 - Other dependencies highlighted in `package.json`
 
 ### Build Script:
@@ -13,7 +14,7 @@ A React frontend for FoodScoop: A new dining experience
 Note: make sure to clone this repository with `--recurse-submodules`.
 
 ```sh
-$ npm i
+$ yarn
 $ npx ttsc
 ```
 

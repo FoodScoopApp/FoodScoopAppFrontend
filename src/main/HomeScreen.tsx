@@ -48,6 +48,7 @@ export default function HomeScreen({ navigation }: Props) {
                 <>
                     <TouchableOpacity>
                         <Ionicons
+                            color={accentColor}
                             name={"calendar"}
                             size={30}
                             style={{ marginLeft: 20, marginRight: 20 }}
@@ -57,6 +58,7 @@ export default function HomeScreen({ navigation }: Props) {
                         onPress={() => navigation.navigate("ProfileScreen")}
                     >
                         <Ionicons
+                            color={accentColor}
                             name="person"
                             size={30}
                             style={{ marginRight: 5 }}

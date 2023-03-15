@@ -18,6 +18,8 @@ import {
 } from "../dataconnection/FoodScoopAppTypes/models";
 import RestrictionsScreen from "../main/RestrictionsScreen";
 import { accentColor } from "../dataconnection/FoodScoopAppTypes/converters";
+import { FilterView, FilterViewProps } from "../filter/FilterView";
+import { StatusBar } from "expo-status-bar";
 
 export type RootStackParamList = {
     LoginScreen: undefined;
@@ -79,7 +81,7 @@ export default function AppNavigator() {
             key={6}
             name={"DiningHallListView"}
             component={DiningHallListView}
-        />,
+        />
     ];
 
     const [stack, setStack] = useState([] as JSX.Element[]);
@@ -105,10 +107,11 @@ export default function AppNavigator() {
                     border: "",
                     card: "",
                     notification: "",
-                    text: "black",
+                    text: accentColor,
                 },
             }}
         >
+            <StatusBar style={"dark"}></StatusBar>
             <Stack.Navigator>{stack}</Stack.Navigator>
         </NavigationContainer>
     ) : null;
