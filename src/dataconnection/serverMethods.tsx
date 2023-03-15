@@ -167,6 +167,11 @@ export const updatePushToken = async (req: PushTokenUpdateReq) => {
     return resp
 };
 
+export const getMealPlan = async () => {
+    const resp = await requestBuilder("get", "mealplan", {})
+    return resp
+}
+
 /* Helper functions */
 
 export const getFilledDiningHall = async (
@@ -222,4 +227,3 @@ export const getCurrentMealPeriodForDiningHall = (diningHall: DiningHall) => {
 
     return null;
 };
-
