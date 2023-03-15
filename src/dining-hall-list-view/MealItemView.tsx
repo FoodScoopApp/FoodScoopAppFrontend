@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
 
 type MealItemProps = {
     meal: Meal;
+    press?: () => void;
 };
 
 export function IconItem(props: MealItemProps) {
@@ -110,20 +111,25 @@ export function ListItem(props: MealItemProps) {
     return (
         <View style={styles.hstack}>
             {/* <BetterImage source={image} style={styles.listimage} /> */}
-            <CustomFastImage
-                source={{
-                    uri: image ? (image as ImageURISource).uri ?? "" : "",
-                }}
-                style={styles.listimage}
-                cacheKey={image ? (image as ImageURISource).uri ?? "" : ""}
-            />
+            <TouchableOpacity
+                style={{flexDirection: "row"}}
+                onPress={() => props.press ? props.press() : null}>
+                <CustomFastImage
+                    source={{
+                        uri: image ? (image as ImageURISource).uri ?? "" : "",
+                    }}
+                    style={styles.listimage}
+                    cacheKey={image ? (image as ImageURISource).uri ?? "" : ""}
+                />
+                <View style={styles.vstack}>
+                    <Text style={{ fontWeight: "bold" }}>{meal.name}</Text>
+                    <TagsView restrictions={meal.dietaryRestrictions} />
+                    <Text>{meal.description}</Text>
+                    {/* <Text>{meal.description}</Text> */}
+                </View>
+            </TouchableOpacity>
 
-            <View style={styles.vstack}>
-                <Text style={{ fontWeight: "bold" }}>{meal.name}</Text>
-                <TagsView restrictions={meal.dietaryRestrictions} />
-                <Text>{meal.description}</Text>
-                {/* <Text>{meal.description}</Text> */}
-            </View>
+
             <TouchableOpacity
                 onPress={async () => {
                     const isNewFav = !isFavorite;
