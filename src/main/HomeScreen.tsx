@@ -42,6 +42,22 @@ export default function HomeScreen({ navigation }: Props) {
     const [diningHalls, setDiningHalls] = useState([] as DiningHall[]);
     const [levels, setLevels] = useState<ActivityLevelAggResp | null>(null);
 
+    type ItemProps = { name: string[] };
+    const Item = ({ name }: ItemProps) => (
+        <View style={styles.item}>
+            <TouchableOpacity onPress={() => navigation.navigate("ItemView", { mealID: name[2] })}>
+                <CustomFastImage
+                    source={{
+                        uri: name[1],
+                    }}
+                    style={styles.image}
+                    cacheKey={name[1]}
+                />
+                <Text style={styles.name}>{name[0]}</Text>
+            </TouchableOpacity>
+        </View>
+    );
+
     useEffect(() => {
         navigation.setOptions({
             headerRight: () => (
@@ -224,7 +240,7 @@ export default function HomeScreen({ navigation }: Props) {
                             if (name.length > 30) {
                                 name = name.substring(0, 30) + "...";
                             }
-                            items.push([name, getImageID(m.id)]);
+                            items.push([name, getImageID(m.id), m.id]);
                         }
                     }
 
@@ -272,22 +288,6 @@ export default function HomeScreen({ navigation }: Props) {
         </ScrollView>
     );
 }
-
-type ItemProps = { name: string[] };
-const Item = ({ name }: ItemProps) => (
-    <View style={styles.item}>
-        <TouchableOpacity>
-            <CustomFastImage
-                source={{
-                    uri: name[1],
-                }}
-                style={styles.image}
-                cacheKey={name[1]}
-            />
-            <Text style={styles.name}>{name[0]}</Text>
-        </TouchableOpacity>
-    </View>
-);
 
 const styles = StyleSheet.create({
     container: {

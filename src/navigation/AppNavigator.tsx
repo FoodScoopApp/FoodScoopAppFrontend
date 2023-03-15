@@ -4,7 +4,7 @@ import LoginScreen from "../auth/LoginScreen";
 import SignupScreen from "../auth/SignupScreen";
 import HomeScreen from "../main/HomeScreen";
 import modalView from "../modal/modalView";
-import itemView from "../itemScreen/itemView"
+import itemView from "../itemScreen/ItemView"
 import DiningHallListView from "../dining-hall-list-view/DiningHallListView";
 
 import ProfileScreen from "../main/ProfileScreen";
@@ -15,11 +15,12 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import DiningHallSubcategoryView from "../dining-hall-subcategory-view/DiningHallSubcategoryView";
 import { getUser } from "../dataconnection/serverMethods";
 import {
-    DiningHallName,
+    DiningHallName, MealID,
     Subcategory,
 } from "../dataconnection/FoodScoopAppTypes/models";
 import RestrictionsScreen from "../main/RestrictionsScreen";
 import { accentColor } from "../dataconnection/FoodScoopAppTypes/converters";
+import ItemView from "../itemScreen/ItemView";
 
 export type RootStackParamList = {
     LoginScreen: undefined;
@@ -30,7 +31,7 @@ export type RootStackParamList = {
     DiningHallSubcategoryScreen: { subcategory: Subcategory };
     DiningHallListView: { diningHallName: DiningHallName };
     ModalView: undefined,
-    ItemView: undefined
+    ItemView: { mealID: MealID },
     RestrictionsScreen: undefined;
 };
 
@@ -38,10 +39,6 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function AppNavigator() {
     const initStack = [
-        <Stack.Screen
-            name={"ItemView"}
-            component={itemView}
-            options={{ title: "Item Screen" }} />,
         <Stack.Screen
             key={2}
             name={"LoginScreen"}
@@ -89,9 +86,10 @@ export default function AppNavigator() {
             component={DiningHallListView}
         />,
         <Stack.Screen
-            name={"ModalView"}
-            component={modalView}
-            options={{ title: "Filter Screen" }} />
+            name={"ItemView"}
+            component={ItemView}
+            options={{ title: "View Item" }}
+        />
     ];
 
     const [stack, setStack] = useState([] as JSX.Element[]);
