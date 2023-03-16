@@ -48,7 +48,7 @@ export default function AppNavigator() {
             key={1}
             name={"SignupScreen"}
             component={SignupScreen}
-            options={{ title: "Sign Up" }}
+            options={{ title: "Sign Up", gestureEnabled: false }}
         />,
         <Stack.Screen
             key={0}

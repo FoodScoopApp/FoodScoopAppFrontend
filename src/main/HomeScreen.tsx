@@ -46,15 +46,6 @@ export default function HomeScreen({ navigation }: Props) {
 
     type ItemProps = { name: string[] };
     const Item = ({ name }: ItemProps) => {
-        const Img = memo(() => (
-            <CustomFastImage
-                source={{
-                    uri: name[1],
-                }}
-                style={styles.image}
-                cacheKey={name[1]}
-            />
-        ));
         return (
             <View style={styles.item}>
                 <TouchableOpacity
@@ -62,7 +53,13 @@ export default function HomeScreen({ navigation }: Props) {
                         navigation.navigate("ItemView", { mealID: name[2] })
                     }
                 >
-                    <Img />
+                    <CustomFastImage
+                        source={{
+                            uri: name[1],
+                        }}
+                        style={styles.image}
+                        cacheKey={name[1]}
+                    />
                     <Text style={styles.name}>{name[0]}</Text>
                 </TouchableOpacity>
             </View>
@@ -79,22 +76,14 @@ export default function HomeScreen({ navigation }: Props) {
                         )
                     }
                 >
-                    <Ionicons
-                        color={accentColor}
-                        name={"calendar"}
-                        size={30}
-                    />
+                    <Ionicons color={accentColor} name={"calendar"} size={30} />
                 </TouchableOpacity>
             ),
             headerRight: () => (
                 <TouchableOpacity
                     onPress={() => navigation.navigate("ProfileScreen")}
                 >
-                    <Ionicons
-                        color={accentColor}
-                        name="person"
-                        size={30}
-                    />
+                    <Ionicons color={accentColor} name="person" size={30} />
                 </TouchableOpacity>
             ),
             headerBackVisible: false,

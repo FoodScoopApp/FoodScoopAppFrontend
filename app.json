@@ -20,7 +20,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.eaideasllc.FoodScoop",
-      "buildNumber": "2"
+      "buildNumber": "4"
     },
     "android": {
       "adaptiveIcon": {
