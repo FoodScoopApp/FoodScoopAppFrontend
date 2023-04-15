@@ -37,6 +37,7 @@ import {
 import { ChangeUserPropReq } from "../dataconnection/FoodScoopAppTypes/re";
 import Slider from "@react-native-community/slider";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as FileSystem from "expo-file-system";
 
 type Props = NativeStackScreenProps<RootStackParamList, "ProfileScreen">;
 export default function ProfileScreen({ navigation }: Props) {
@@ -274,6 +275,11 @@ export default function ProfileScreen({ navigation }: Props) {
                 color={accentColor}
                 title={"Reset Cache"}
                 onPress={() => {
+                    FileSystem.readDirectoryAsync(FileSystem.cacheDirectory ?? "").then(dir => {
+                        dir.forEach(file => {
+                            FileSystem.deleteAsync(FileSystem.cacheDirectory+file);
+                        })
+                    })
                     AsyncStorage.clear();
                     signOut();
                 }}

@@ -6,7 +6,7 @@ import {
     ActivityIndicator,
     StyleProp,
     ImageStyle,
-    Text
+    Text,
 } from "react-native";
 import * as FileSystem from "expo-file-system";
 
@@ -17,11 +17,14 @@ function getImgXtension(uri: string) {
 async function findImageInCache(uri: string) {
     try {
         let info = await FileSystem.getInfoAsync(uri);
-        if ((info.size ?? 0) < 16000) return {
-            exists: false,
-            err: true,
-            msg: "error",
-        };
+        if ((info.size ?? 0) < 16000) {
+            FileSystem.deleteAsync(uri).catch(() => {});
+            return {
+                exists: false,
+                err: true,
+                msg: "error",
+            };
+        }
         return { ...info, err: false };
     } catch (error) {
         return {
@@ -46,7 +49,9 @@ async function cacheImage(
             callback
         );
         const downloaded = await downloadImage.downloadAsync();
-        if (downloaded?.status != 200 || downloaded.mimeType === "text/html") {
+        console.log(uri)
+        console.log(downloaded?.headers)
+        if (downloaded?.status != 200 || downloaded.mimeType !== "image/jpeg") {
             downloadImage.cancelAsync();
             FileSystem.deleteAsync(cacheUri).catch(() => {});
             return {

@@ -83,7 +83,7 @@ export default function ItemView({ route, navigation }: ItemViewProps) {
             ) as ReactElement[];
         } else {
             return (
-                <View key={ingredients.repeat(level + 1)} style={styles.item}>
+                <View key={ingredients.repeat(level + 1)+Math.random()} style={styles.item}>
                     <Text
                         style={[
                             styles.itemText,
