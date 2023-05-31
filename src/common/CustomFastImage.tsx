@@ -49,8 +49,8 @@ async function cacheImage(
             callback
         );
         const downloaded = await downloadImage.downloadAsync();
-        console.log(uri)
-        console.log(downloaded?.headers)
+        // console.log(uri)
+        // console.log(downloaded?.headers)
         if (downloaded?.status != 200 || downloaded.mimeType !== "image/jpeg") {
             downloadImage.cancelAsync();
             FileSystem.deleteAsync(cacheUri).catch(() => {});
